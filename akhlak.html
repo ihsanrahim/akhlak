@@ -1,0 +1,2021 @@
+<!doctype html>
+<html lang="ms" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>اخلاق — درجه 6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Vazirmatn:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pine:#1B4B43; --pine-d:#123330; --rust:#8C4426; --brass:#C9A227; --brass-d:#8E7118;
+  --bg:#EFEAE0; --card:#FBF8F1; --ink:#23302C; --ink-soft:#5B6560; --line:#D9D2C1;
+  --green:#2F7D52; --red:#B23A2E; --shadow:0 2px 10px rgba(20,25,20,.08);
+  --radius:14px; --header-h:56px; --counter-h:46px;
+}
+[data-theme="dark"]{
+  --bg:#14211E; --card:#1B2B27; --ink:#E8E3D6; --ink-soft:#AEB6AC; --line:#33443E;
+  --pine:#4E9C86; --rust:#C97A54; --brass:#E4C25A; --brass-d:#B99A32;
+  --shadow:0 2px 14px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Vazirmatn','Scheherazade New',serif;
+  direction:rtl; min-height:100vh;
+}
+.latin{font-family:'Work Sans',sans-serif;}
+h1,h2,h3,.jawi-head{font-family:'Scheherazade New',serif; font-weight:700;}
+button{font-family:inherit; direction:rtl;}
+:focus-visible{outline:3px solid var(--brass); outline-offset:2px;}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important;} }
+
+/* ---------- sticky header + counter (attached, all pages, always) ---------- */
+.app-header{
+  position:sticky; top:0; z-index:40; background:var(--bg);
+  border-bottom:1px solid var(--line);
+}
+.tabbar{
+  display:flex; height:var(--header-h);
+}
+.tabbar button{
+  flex:1; background:none; border:none; font-size:1.15rem; color:var(--ink-soft);
+  border-bottom:3px solid transparent; cursor:pointer;
+}
+.tabbar button.active{ color:var(--pine); border-bottom-color:var(--brass); font-weight:700; }
+[data-theme="dark"] .tabbar button.active{ color:var(--brass); }
+.theme-toggle{
+  width:48px; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--ink-soft);
+}
+
+/* ---------- Mizan progress bar: the one signature element ----------
+   A brass beam with a fulcrum triangle; each fasal's 10 sections hang
+   as a cluster of segment-weights either side, tipping toward whichever
+   side (green=mastered / red=needs work) currently outweighs the other. */
+.counter-bar{ height:var(--counter-h); padding:0 10px; display:flex; align-items:center; gap:10px; overflow-x:auto; }
+.counter-total{ font-size:.95rem; white-space:nowrap; color:var(--ink-soft); flex:0 0 auto; }
+.counter-total b{ color:var(--pine); }
+[data-theme="dark"] .counter-total b{ color:var(--brass); }
+.mizan-track{ display:flex; gap:12px; flex:1 1 auto; overflow-x:auto; }
+.mizan-cluster{ display:flex; flex-direction:column; align-items:center; flex:0 0 auto; padding:2px 4px; }
+.mizan-cluster .seg-row{ display:flex; gap:3px; }
+.seg{ width:8px; height:16px; border-radius:2px; border:1.4px solid var(--brass-d); background:transparent; padding:0; cursor:pointer; }
+.seg.faded{ background:var(--brass); opacity:.35; }
+.seg.solid{ background:var(--brass); opacity:.85; }
+.seg.green{ background:var(--green); border-color:var(--green); }
+.seg.red{ background:var(--red); border-color:var(--red); }
+.mizan-cluster .fasal-label{ font-size:.62rem; color:var(--ink-soft); margin-top:2px; max-width:56px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; background:none; border:none; cursor:pointer; padding:0; font-family:inherit; }
+.correct-readout{ font-size:.85rem; color:var(--green); white-space:nowrap; flex:0 0 auto; }
+
+/* ---------- page content ---------- */
+.page{ display:none; padding:14px; max-width:720px; margin:0 auto; }
+.page.active{ display:block; }
+
+/* ---------- notes ---------- */
+.fasal-tabs{ display:flex; overflow-x:auto; gap:6px; margin-bottom:12px; }
+.fasal-tabs button{ flex:0 0 auto; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:8px 16px; font-size:1rem; color:var(--ink); cursor:pointer; }
+.fasal-tabs button.active{ background:var(--pine); color:#fff; border-color:var(--pine); }
+.card{ background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; margin-bottom:14px; }
+.dalil-box{ border:2px solid var(--brass); border-radius:var(--radius); padding:16px; background:linear-gradient(180deg,var(--card),transparent); margin-bottom:14px; }
+.ayat-ar{ font-size:1.5rem; line-height:2.4; text-align:center; margin-bottom:8px; }
+.ayat-ref{ text-align:center; color:var(--brass-d); font-size:.9rem; margin-bottom:8px; }
+.ayat-meaning{ font-size:1.05rem; }
+.hadith-note{ font-size:.85rem; color:var(--ink-soft); border-right:3px solid var(--rust); padding-right:8px; margin-top:6px;}
+.key-points{ padding-right:20px; }
+.key-points li{ margin-bottom:6px; }
+table.ref-table{ width:100%; border-collapse:collapse; margin:10px 0; }
+table.ref-table th,table.ref-table td{ border:1px solid var(--line); padding:8px; text-align:right; font-size:.95rem; }
+table.ref-table th{ background:var(--pine); color:#fff; }
+
+/* mind map: pure HTML/CSS branching (no SVG, jawi width unpredictable) */
+.mindmap{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+.mindmap .root{ background:var(--pine); color:#fff; border-radius:10px; padding:8px 14px; font-weight:700; align-self:center; }
+.mindmap .branches{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; width:100%; border-top:2px dashed var(--brass); padding-top:8px; }
+.mindmap .branch{ background:var(--card); border:1.5px solid var(--brass); border-radius:10px; padding:8px 12px; min-width:120px; }
+.mindmap .branch .leafs{ margin-top:6px; font-size:.85rem; color:var(--ink-soft); padding-right:14px; }
+
+.tip-box{ background:var(--card); border-right:4px solid var(--rust); border-radius:8px; padding:10px 14px; margin-top:8px; }
+
+/* ---------- quiz ---------- */
+.section-badge{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--pine); color:#fff; font-size:.9rem; margin-left:8px; }
+[data-theme="dark"] .section-badge{ background:var(--brass); color:#14211E; }
+.section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.section-score{ font-size:1rem; color:var(--ink-soft); }
+.q-block{ border-bottom:1px solid var(--line); padding:12px 0; }
+.pair-row{ margin-bottom:8px; }
+.pair-row .q-stem{ margin-bottom:4px; font-size:.98rem; }
+.q-stem{ margin-bottom:8px; font-size:1.05rem; }
+.opt-row{ display:flex; align-items:center; gap:8px; padding:8px; border-radius:8px; border:1px solid var(--line); margin-bottom:6px; cursor:pointer; background:var(--card);}
+.opt-row.marked-correct{ border-color:var(--green); background:color-mix(in srgb, var(--green) 12%, var(--card)); }
+.opt-row.marked-wrong{ border-color:var(--red); background:color-mix(in srgb, var(--red) 12%, var(--card)); }
+.mark-icon{ font-size:1rem; }
+.reveal-btn{ font-size:.85rem; color:var(--rust); background:none; border:1px solid var(--rust); border-radius:8px; padding:4px 10px; cursor:pointer; margin-top:4px; }
+mark.hl{ background:none; color:var(--rust); font-weight:700; }
+[data-theme="dark"] mark.hl{ color:var(--brass); }
+.key-points li::marker{ color:var(--brass-d); }
+.reveal-answer{ display:none; margin-top:6px; font-size:.9rem; color:var(--ink-soft); }
+.reveal-answer.shown{ display:block; }
+.drop-slot{ display:inline-block; min-width:70px; border-bottom:2px dashed var(--brass); padding:2px 6px; margin:0 3px; text-align:center; }
+.drop-slot.filled{ border-style:solid; }
+.word-bank{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.word-chip{ background:var(--card); border:1.5px solid var(--pine); border-radius:8px; padding:6px 12px; cursor:pointer; }
+.word-chip.used{ opacity:.35; pointer-events:none; }
+.match-col{ display:flex; flex-direction:column; gap:6px; }
+.order-list{ list-style:none; padding:0; }
+.order-item{ background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.order-handle{ cursor:grab; }
+.bin{ border:1.5px dashed var(--brass); border-radius:10px; padding:8px; min-height:44px; margin-bottom:8px; }
+.bin-title{ font-weight:700; font-size:.9rem; margin-bottom:6px; }
+.section-actions{ display:flex; gap:10px; margin-top:12px; }
+.btn{ border:none; border-radius:10px; padding:10px 18px; font-size:1rem; cursor:pointer; }
+.btn-submit{ background:var(--pine); color:#fff; }
+.btn-reset{ background:none; border:1.5px solid var(--rust); color:var(--rust); }
+
+/* ---------- glossary ---------- */
+.search-box{ width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--line); font-size:1.05rem; margin-bottom:10px; background:var(--card); color:var(--ink); }
+.filter-chips{ display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; }
+.filter-chips button{ flex:0 0 auto; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-size:.85rem; cursor:pointer; }
+.filter-chips button.active{ background:var(--brass); border-color:var(--brass); color:#14211E; }
+.gloss-item{ padding:10px 0; border-bottom:1px solid var(--line); }
+.gloss-term{ font-weight:700; font-size:1.1rem; color:var(--pine); }
+[data-theme="dark"] .gloss-term{ color:var(--brass); }
+.gloss-fasal-tag{ font-size:.75rem; color:var(--ink-soft); }
+
+.footer-note{ text-align:center; font-size:.8rem; color:var(--ink-soft); padding:20px 0; }
+.saved-at{ text-align:center; font-size:.8rem; color:var(--ink-soft); }
+.clear-all-btn{ display:block; margin:8px auto; background:none; border:1px solid var(--red); color:var(--red); border-radius:10px; padding:6px 14px; font-size:.85rem; cursor:pointer; }
+
+@media (max-width:390px){
+  .ayat-ar{ font-size:1.3rem; }
+  .tabbar button{ font-size:1rem; }
+}
+
+</style>
+</head>
+<body>
+<div class="app-header" id="app-header"></div>
+
+<main>
+  <div class="page active" id="page-notes"></div>
+  <div class="page" id="page-quiz"></div>
+  <div class="page" id="page-gloss"></div>
+</main>
+
+<div class="footer-note">اڤليكاسي اولڠكاجي اخلاق &middot; دبينا خصوص اونتوق كݢوناءن ڤريبادي</div>
+
+<script>
+/* ============================================================
+   AKHLAK APP ENGINE
+   Data-driven renderers for the 10 quiz section types.
+   Built first, tested with synthetic data, THEN wired to real content.
+   ============================================================ */
+
+const AR_NUM = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+function toArNum(n){
+  return String(n).split('').map(c => /[0-9]/.test(c) ? AR_NUM[+c] : c).join('');
+}
+
+/* ---------- shuffle (Fisher-Yates, seeded per-question so re-render is stable) ---------- */
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function seededShuffle(arr, seed){
+  const rnd = mulberry32(seed);
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(rnd() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+// simple string hash -> seed, so the same question id always shuffles the same way
+function strSeed(s){
+  let h = 0;
+  for (let i = 0; i < s.length; i++){ h = (h * 31 + s.charCodeAt(i)) | 0; }
+  return h;
+}
+
+/* ============================================================
+   STATE
+   answers: { [qid]: currentAnswerValue }   -- always current, not locked
+   graded:  { [qid]: {correct: bool, revealed: bool} }  -- result of the LAST submit
+   ============================================================ */
+const STORE_KEY = 'akhlak_progress_v1';
+const THEME_KEY = 'akhlak_theme_v1';  // separate key so "clear answers" never touches theme
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return { answers:{}, graded:{}, savedAt:null };
+    const parsed = JSON.parse(raw);
+    return { answers: parsed.answers||{}, graded: parsed.graded||{}, savedAt: parsed.savedAt||null };
+  } catch(e){ return { answers:{}, graded:{}, savedAt:null }; }
+}
+function saveState(state){
+  state.savedAt = new Date().toISOString();
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e){ /* storage full/unavailable: fail silently, keep running in-memory */ }
+  return state;
+}
+
+/* ============================================================
+   SHARED "is this actually answered" CHECK
+   One definition, used everywhere state.answers is inspected, so
+   grading, segment coloring, and the overall counter never
+   disagree with each other. A container that merely EXISTS
+   (an empty {} or an array of only '') is not an answer --
+   the user has to have put something real into it.
+   ============================================================ */
+function isAnsweredValue(ans){
+  if (ans === undefined || ans === '') return false;
+  if (Array.isArray(ans)) return ans.length > 0 && ans.some(v => v !== '' && v !== undefined);
+  if (typeof ans === 'object' && ans !== null) {
+    const vals = Object.values(ans);
+    return vals.length > 0 && vals.some(v => v !== '' && v !== undefined);
+  }
+  return true;
+}
+
+/* ============================================================
+   GRADING — per section type. Each returns true/false.
+   IMPORTANT (non-negotiable check #1): every comparison guards
+   against '' explicitly. Never rely on `value == correctIndex`
+   where an unanswered '' could coerce to 0.
+   ============================================================ */
+const graders = {
+  objektif: (q, ans) => ans !== '' && ans !== undefined && +ans === q.correct,
+  betulSalah: (q, ans) => ans !== '' && ans !== undefined && ans === q.correct, // 'betul' | 'salah'
+  seretLepas: (q, ans) => {
+    if (!ans || !Array.isArray(ans)) return false;
+    if (ans.length !== q.blanks.length) return false;
+    return q.blanks.every((correctWord, i) => ans[i] !== '' && ans[i] !== undefined && ans[i] === correctWord);
+  },
+  padankan: (q, ans) => {
+    if (!ans || typeof ans !== 'object') return false;
+    return q.pairs.every(p => ans[p.left] !== '' && ans[p.left] !== undefined && ans[p.left] === p.right);
+  },
+  susunUrutan: (q, ans) => {
+    if (!ans || !Array.isArray(ans) || ans.length !== q.order.length) return false;
+    return q.order.every((step, i) => ans[i] === step);
+  },
+  kenalPasti: (q, ans) => ans !== '' && ans !== undefined && +ans === q.correct,
+  kesanSebab: (q, ans) => {
+    // both the consequence AND the reason must match to score
+    if (!ans || ans.effect === '' || ans.effect === undefined || ans.reason === '' || ans.reason === undefined) return false;
+    return +ans.effect === q.correctEffect && +ans.reason === q.correctReason;
+  },
+  klasifikasi: (q, ans) => {
+    if (!ans || typeof ans !== 'object') return false;
+    return q.items.every(it => ans[it.label] !== '' && ans[it.label] !== undefined && ans[it.label] === it.bin);
+  },
+  situasi: (q, ans) => ans !== '' && ans !== undefined && +ans === q.correct,
+  kesanSalah: (q, ans) => {
+    if (!ans || ans.wordIndex === '' || ans.wordIndex === undefined || ans.replacement === '' || ans.replacement === undefined) return false;
+    return +ans.wordIndex === q.wrongIndex && +ans.replacement === q.correctReplacement;
+  }
+};
+
+function gradeQuestion(sectionType, q, ans){
+  const fn = graders[sectionType];
+  if (!fn) throw new Error('no grader for ' + sectionType);
+  return !!fn(q, ans);
+}
+
+/* ============================================================
+   SECTION-LEVEL GRADE + RETRY FIX
+   Submit is idempotent: clicking it again always re-grades
+   against whatever is currently selected. Nothing gets disabled
+   after a wrong mark, so the child can change an answer and hit
+   سمق جواڤن again immediately — no need to Reset the section.
+   ============================================================ */
+/* ============================================================
+   PER-QUESTION GRADE (checking one question must never touch
+   the grading state of any other question in the section)
+   ============================================================ */
+function gradeOneQuestion(sectionType, q, state, fasalId, sectionId){
+  const qid = `${fasalId}:${sectionId}:${q.id}`;
+  const ans = state.answers[qid];
+  const isAnswered = isAnsweredValue(ans);
+  const ok = isAnswered && gradeQuestion(sectionType, q, ans);
+  state.graded[qid] = { correct: ok, attempted: isAnswered,
+    revealed: (state.graded[qid] && state.graded[qid].revealed) || false };
+  saveState(state);
+  return ok;
+}
+
+/* ============================================================
+   SECTION-LEVEL CHECK (bulk, the one سمق جواڤن button per section)
+   Only grades questions that are actually answered right now --
+   a still-blank question is left completely untouched (no mark,
+   no false "wrong"), so filling in just one question and pressing
+   the section's single check button never highlights the rest.
+   Re-pressing after answering more just picks up whatever is new;
+   anything already graded and unchanged keeps its existing mark.
+   ============================================================ */
+function gradeSection(sectionType, questions, state, fasalId, sectionId){
+  let correct = 0;
+  questions.forEach(q => {
+    const qid = `${fasalId}:${sectionId}:${q.id}`;
+    if (!isAnsweredValue(state.answers[qid])) return; // skip -- leave ungraded entirely
+    if (gradeOneQuestion(sectionType, q, state, fasalId, sectionId)) correct++;
+  });
+  return correct; // count of correct among the ones that were actually answered
+}
+
+function resetSection(questions, state, fasalId, sectionId){
+  questions.forEach(q => {
+    const qid = `${fasalId}:${sectionId}:${q.id}`;
+    delete state.answers[qid];
+    delete state.graded[qid];
+  });
+  saveState(state);
+}
+
+/* ============================================================
+   PROGRESS COUNTER
+   overall answered/total across all 400, plus 10-segment cluster
+   per fasal. Segment states: hollow(untouched) / faded(partial,
+   only relevant at section granularity so segments here map
+   1 segment = 1 section) / solid(complete,unsubmitted) /
+   green(10/10... i.e. all-correct) / red(graded, below full).
+   ============================================================ */
+function sectionSegmentState(sectionType, questions, state, fasalId, sectionId){
+  let answeredCount = 0, gradedCount = 0, correctCount = 0;
+  questions.forEach(q => {
+    const qid = `${fasalId}:${sectionId}:${q.id}`;
+    const ans = state.answers[qid];
+    const isAnswered = isAnsweredValue(ans);
+    if (isAnswered) answeredCount++;
+    const g = state.graded[qid];
+    if (g){ gradedCount++; if (g.correct) correctCount++; }
+  });
+  if (gradedCount === questions.length && questions.length > 0){
+    return correctCount === questions.length ? 'green' : 'red';
+  }
+  if (answeredCount === questions.length && questions.length > 0) return 'solid';
+  if (answeredCount > 0) return 'faded';
+  return 'hollow';
+}
+
+function overallProgress(allFasalData, state){
+  let total = 0, answered = 0, correctTotal = 0, gradedTotal = 0;
+  allFasalData.forEach(fasal => {
+    fasal.sections.forEach(sec => {
+      sec.questions.forEach(q => {
+        total++;
+        const qid = `${fasal.id}:${sec.id}:${q.id}`;
+        const ans = state.answers[qid];
+        const isAnswered = isAnsweredValue(ans);
+        if (isAnswered) answered++;
+        const g = state.graded[qid];
+        if (g){ gradedTotal++; if (g.correct) correctTotal++; }
+      });
+    });
+  });
+  return { total, answered, correctTotal, gradedTotal };
+}
+
+const AkhlakEngineExports = { toArNum, seededShuffle, strSeed, loadState, saveState,
+  graders, gradeQuestion, gradeOneQuestion, gradeSection, resetSection, isAnsweredValue,
+  sectionSegmentState, overallProgress, STORE_KEY, THEME_KEY };
+if (typeof module !== 'undefined' && module.exports) { module.exports = AkhlakEngineExports; }
+if (typeof window !== 'undefined') { window.AkhlakEngine = AkhlakEngineExports; }
+
+</script>
+<script>
+/* ============================================================
+   RENDERER — DOM layer on top of engine.js (grading/shuffle/state
+   already unit-tested in isolation). This file is the part that
+   needs a real DOM, so it's exercised via jsdom next.
+   ============================================================ */
+(function(global){
+const E = global.AkhlakEngine; // engine.js attaches itself here in-browser (see bottom of file)
+
+function el(tag, attrs, children){
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs){
+    if (k === 'class') n.className = attrs[k];
+    else if (k === 'text') n.textContent = attrs[k];
+    else n.setAttribute(k, attrs[k]);
+  }
+  (children||[]).forEach(c => n.appendChild(c));
+  return n;
+}
+
+/* ---------- visibility helper: matches spec's non-negotiable check #3
+   ("test getBoundingClientRect, not .hidden") for the reveal-answer toggle ---------- */
+function isVisible(node){
+  return node.getBoundingClientRect().height > 0 && !node.hasAttribute('hidden');
+}
+
+/* ================= per-type option/answer widgets ================= */
+
+function renderObjektif(q, qid, state, container){
+  const order = E.seededShuffle(q.options.map((_,i)=>i), E.strSeed(qid));
+  const wrap = el('div', {class:'opts'});
+  order.forEach(origIdx => {
+    const row = el('label', {class:'opt-row'});
+    const input = el('input', {type:'radio', name:qid});
+    input.value = String(origIdx);
+    input.checked = state.answers[qid] === String(origIdx);
+    input.addEventListener('change', () => { state.answers[qid] = input.value; E.saveState(state); });
+    row.appendChild(input);
+    row.appendChild(el('span', {text:q.options[origIdx]}));
+    wrap.appendChild(row);
+  });
+  container.appendChild(wrap);
+}
+
+function renderBetulSalah(q, qid, state, container){
+  const wrap = el('div', {class:'opts'});
+  ['betul','salah'].forEach(v => {
+    const row = el('label', {class:'opt-row'});
+    const input = el('input', {type:'radio', name:qid});
+    input.value = v;
+    input.checked = state.answers[qid] === v;
+    input.addEventListener('change', () => { state.answers[qid] = v; E.saveState(state); });
+    row.appendChild(input);
+    row.appendChild(el('span', {text: v === 'betul' ? 'بتول' : 'ساله'}));
+    wrap.appendChild(row);
+  });
+  container.appendChild(wrap);
+}
+
+function renderSeretLepas(q, qid, state, container){
+  // works by drag AND by tap-then-tap (touch): click a chip to "arm" it,
+  // then click a slot to place it. Click a filled slot to clear it back to the bank.
+  // IMPORTANT: `current` starts as a local scratch array -- it is only written
+  // into state.answers[qid] the moment the user actually places/clears a word,
+  // never just from rendering. Otherwise every seretLepas question would look
+  // "answered" in the progress counter the instant its page is opened.
+  const current = state.answers[qid] || new Array(q.blanks.length).fill('');
+
+  const stemWrap = el('div', {class:'q-stem'});
+  const slots = [];
+  q.stemParts.forEach((part, i) => {
+    stemWrap.appendChild(document.createTextNode(part));
+    if (i < q.blanks.length){
+      const slot = el('span', {class:'drop-slot', text: current[i] || '…'});
+      slot.dataset.idx = i;
+      if (current[i]) slot.classList.add('filled');
+      slot.addEventListener('click', () => {
+        if (current[i]){ current[i] = ''; state.answers[qid] = current; E.saveState(state); rerenderChips(); slot.textContent='…'; slot.classList.remove('filled'); return; }
+        if (armedChip !== null){
+          current[i] = armedChip;
+          state.answers[qid] = current; E.saveState(state);
+          slot.textContent = armedChip; slot.classList.add('filled');
+          armedChip = null; rerenderChips();
+        }
+      });
+      slot.addEventListener('dragover', ev => ev.preventDefault());
+      slot.addEventListener('drop', ev => {
+        ev.preventDefault();
+        const w = ev.dataTransfer.getData('text/plain');
+        current[i] = w; state.answers[qid] = current; E.saveState(state);
+        slot.textContent = w; slot.classList.add('filled');
+        rerenderChips();
+      });
+      slots.push(slot);
+      stemWrap.appendChild(slot);
+    }
+  });
+  container.appendChild(stemWrap);
+  let armedChip = null;
+
+  const bank = el('div', {class:'word-bank'});
+  function rerenderChips(){
+    bank.innerHTML = '';
+    q.wordBank.forEach(w => {
+      const usedCount = current.filter(c => c === w).length;
+      const availableInBank = q.wordBank.filter(x=>x===w).length;
+      const chip = el('span', {class:'word-chip', text:w});
+      if (usedCount >= availableInBank) chip.classList.add('used');
+      chip.draggable = true;
+      chip.addEventListener('dragstart', ev => ev.dataTransfer.setData('text/plain', w));
+      chip.addEventListener('click', () => { if (!chip.classList.contains('used')){ armedChip = w; } });
+      bank.appendChild(chip);
+    });
+  }
+  rerenderChips();
+  container.appendChild(bank);
+}
+
+function renderPadankan(q, qid, state, container){
+  // same "don't commit until real interaction" rule as seretLepas above.
+  const current = state.answers[qid] || {};
+  const rightOrder = E.seededShuffle(q.pairs.map(p=>p.right), E.strSeed(qid));
+  const wrap = el('div', {class:'match-col'});
+  q.pairs.forEach(p => {
+    const row = el('div', {class:'pair-row'});
+    row.appendChild(el('div', {class:'q-stem', text:p.left}));
+    const sel = el('select');
+    sel.appendChild(el('option', {value:''}, [document.createTextNode('— ڤيليه —')]));
+    rightOrder.forEach(r => {
+      const o = el('option', {value:r}, [document.createTextNode(r)]);
+      if (current[p.left] === r) o.selected = true;
+      sel.appendChild(o);
+    });
+    sel.addEventListener('change', () => { current[p.left] = sel.value; state.answers[qid] = current; E.saveState(state); });
+    row.appendChild(sel);
+    wrap.appendChild(row);
+  });
+  container.appendChild(wrap);
+}
+
+function renderSusunUrutan(q, qid, state, container){
+  // seeded shuffle is deterministic per qid, so recomputing it fresh on every
+  // render (instead of writing it into state.answers at render time) still
+  // looks stable to the user -- it just doesn't falsely count as "answered"
+  // until they actually move something.
+  const current = state.answers[qid] || E.seededShuffle(q.order, E.strSeed(qid+':init'));
+  const list = el('ul', {class:'order-list'});
+  function draw(){
+    list.innerHTML = '';
+    current.forEach((step, i) => {
+      const li = el('li', {class:'order-item'});
+      li.appendChild(el('span', {class:'order-handle', text:'☰'}));
+      li.appendChild(el('span', {text: step}));
+      // tap-friendly up/down instead of relying only on drag, per touch requirement
+      const up = el('button', {type:'button', text:'▲'});
+      up.disabled = i===0;
+      up.addEventListener('click', () => { [current[i-1],current[i]]=[current[i],current[i-1]]; state.answers[qid] = current; E.saveState(state); draw(); });
+      const down = el('button', {type:'button', text:'▼'});
+      down.disabled = i===current.length-1;
+      down.addEventListener('click', () => { [current[i+1],current[i]]=[current[i],current[i+1]]; state.answers[qid] = current; E.saveState(state); draw(); });
+      li.appendChild(up); li.appendChild(down);
+      list.appendChild(li);
+    });
+  }
+  draw();
+  container.appendChild(list);
+}
+
+function renderKenalPasti(q, qid, state, container){
+  renderObjektif(q, qid, state, container); // same interaction shape, different content semantics
+}
+
+function renderKesanSebab(q, qid, state, container){
+  const current = state.answers[qid] || { effect:'', reason:'' };
+  ['effect','reason'].forEach(key => {
+    const label = key === 'effect' ? 'كسن' : 'سبب';
+    container.appendChild(el('div', {class:'q-stem', text:label + ':'}));
+    const opts = key === 'effect' ? q.effectOptions : q.reasonOptions;
+    const order = E.seededShuffle(opts.map((_,i)=>i), E.strSeed(qid+':'+key));
+    const wrap = el('div', {class:'opts'});
+    order.forEach(origIdx => {
+      const row = el('label', {class:'opt-row'});
+      const input = el('input', {type:'radio', name:qid+':'+key});
+      input.value = String(origIdx);
+      input.checked = current[key] === String(origIdx);
+      input.addEventListener('change', () => { current[key] = input.value; state.answers[qid] = current; E.saveState(state); });
+      row.appendChild(input);
+      row.appendChild(el('span', {text:opts[origIdx]}));
+      wrap.appendChild(row);
+    });
+    container.appendChild(wrap);
+  });
+}
+
+function renderKlasifikasi(q, qid, state, container){
+  const current = state.answers[qid] || {};
+  const binsWrap = el('div', {});
+  const bins = {};
+  q.binNames.forEach(name => {
+    const bin = el('div', {class:'bin'});
+    bin.appendChild(el('div', {class:'bin-title', text:name}));
+    const dropArea = el('div', {});
+    bin.appendChild(dropArea);
+    bins[name] = dropArea;
+    binsWrap.appendChild(bin);
+  });
+  container.appendChild(binsWrap);
+  const bank = el('div', {class:'word-bank'});
+  const items = E.seededShuffle(q.items, E.strSeed(qid));
+  function place(item, binName){
+    current[item.label] = binName; state.answers[qid] = current; E.saveState(state); draw();
+  }
+  function draw(){
+    Object.values(bins).forEach(b => b.innerHTML = '');
+    bank.innerHTML = '';
+    items.forEach(it => {
+      const placedIn = current[it.label];
+      const chip = el('span', {class:'word-chip', text:it.label});
+      chip.addEventListener('click', () => {
+        // tap chip -> tap a bin name shown as a quick menu (touch-friendly, no drag required)
+        const menu = el('select');
+        menu.appendChild(el('option', {value:''}, [document.createTextNode('— ڤيليه بهاݢين —')]));
+        q.binNames.forEach(n => menu.appendChild(el('option', {value:n}, [document.createTextNode(n)])));
+        menu.addEventListener('change', () => { if (menu.value) place(it, menu.value); menu.remove(); });
+        chip.appendChild(menu);
+      });
+      if (placedIn && bins[placedIn]) bins[placedIn].appendChild(chip);
+      else bank.appendChild(chip);
+    });
+  }
+  draw();
+  container.appendChild(bank);
+}
+
+function renderSituasi(q, qid, state, container){
+  renderObjektif(q, qid, state, container);
+}
+
+function renderKesanSalah(q, qid, state, container){
+  const current = state.answers[qid] || { wordIndex:'', replacement:'' };
+  const sentence = el('div', {class:'q-stem'});
+  q.sentenceWords.forEach((w, i) => {
+    const span = el('span', {text:w + ' '});
+    span.style.cursor = 'pointer';
+    span.style.padding = '2px';
+    if (String(current.wordIndex) === String(i)) span.style.background = 'var(--brass)';
+    span.addEventListener('click', () => {
+      current.wordIndex = String(i); state.answers[qid] = current; E.saveState(state);
+      sentence.querySelectorAll('span').forEach(s=>s.style.background='');
+      span.style.background = 'var(--brass)';
+    });
+    sentence.appendChild(span);
+  });
+  container.appendChild(sentence);
+  const replWrap = el('div', {class:'opts'});
+  const order = E.seededShuffle(q.replacementOptions.map((_,i)=>i), E.strSeed(qid+':repl'));
+  order.forEach(origIdx => {
+    const row = el('label', {class:'opt-row'});
+    const input = el('input', {type:'radio', name:qid+':repl'});
+    input.value = String(origIdx);
+    input.checked = current.replacement === String(origIdx);
+    input.addEventListener('change', () => { current.replacement = input.value; state.answers[qid] = current; E.saveState(state); });
+    row.appendChild(input);
+    row.appendChild(el('span', {text:q.replacementOptions[origIdx]}));
+    replWrap.appendChild(row);
+  });
+  container.appendChild(replWrap);
+}
+
+const RENDERERS = {
+  objektif: renderObjektif, betulSalah: renderBetulSalah, seretLepas: renderSeretLepas,
+  padankan: renderPadankan, susunUrutan: renderSusunUrutan, kenalPasti: renderKenalPasti,
+  kesanSebab: renderKesanSebab, klasifikasi: renderKlasifikasi, situasi: renderSituasi,
+  kesanSalah: renderKesanSalah
+};
+
+/* ================= section shell: renders N questions + Submit/Reset =================
+   RETRY FIX lives here: inputs are never disabled after grading, and the
+   Submit handler is reattached to always re-run gradeSection against the
+   CURRENT state.answers — so "salah -> reselect -> سمق" just works. */
+function renderSection(fasal, section, state, container, onProgress){
+  const box = el('div', {class:'card', id: `sec-${fasal.id}-${section.id}`});
+  const head = el('div', {class:'section-head'});
+  head.appendChild(el('span', {}, [
+    el('span', {class:'section-badge', text:E.toArNum(section.badgeNum)}),
+    el('span', {text:section.title})
+  ]));
+  const scoreEl = el('span', {class:'section-score'});
+  head.appendChild(scoreEl);
+  box.appendChild(head);
+
+  function currentScoreLabel(){
+    let graded = 0, correct = 0;
+    section.questions.forEach(q => {
+      const qid = `${fasal.id}:${section.id}:${q.id}`;
+      const g = state.graded[qid];
+      if (g){ graded++; if (g.correct) correct++; }
+    });
+    return graded > 0 ? `${E.toArNum(correct)}/${E.toArNum(section.questions.length)}` : '';
+  }
+  scoreEl.textContent = currentScoreLabel();
+
+  section.questions.forEach((q, qi) => {
+    const qid = `${fasal.id}:${section.id}:${q.id}`;
+    const qBlock = el('div', {class:'q-block'});
+    if (q.stem) qBlock.appendChild(el('div', {class:'q-stem', text: `${E.toArNum(qi+1)}. ${q.stem}`}));
+    RENDERERS[section.type](q, qid, state, qBlock);
+
+    const markRow = el('div', {class:'mark-row'});
+    const g = state.graded[qid];
+    // a question only carries a mark once the section's سمق جواڤن button has
+    // graded it -- and that only happens for questions that are actually
+    // answered (gradeSection skips blanks), so an untouched question just
+    // stays open with no mark at all, never a false ✗.
+    if (g){
+      if (g.correct){
+        markRow.appendChild(el('span', {class:'mark-icon', text:'✓ بتول'}));
+        markRow.style.color = 'var(--green)';
+      } else {
+        markRow.appendChild(el('span', {class:'mark-icon', text:'✗ ساله'}));
+        markRow.style.color = 'var(--red)';
+        const revealBtn = el('button', {type:'button', class:'reveal-btn', text:'تونجوق جواڤن'});
+        const revealDiv = el('div', {class:'reveal-answer', text: q.answerText || ''});
+        if (g.revealed) revealDiv.classList.add('shown');
+        revealBtn.addEventListener('click', () => {
+          g.revealed = !g.revealed; E.saveState(state);
+          revealDiv.classList.toggle('shown');
+        });
+        markRow.appendChild(revealBtn);
+        qBlock.appendChild(markRow);
+        qBlock.appendChild(revealDiv);
+        box.appendChild(qBlock);
+        return;
+      }
+    }
+    qBlock.appendChild(markRow);
+    box.appendChild(qBlock);
+  });
+
+  const actions = el('div', {class:'section-actions'});
+  const checkBtn = el('button', {type:'button', class:'btn btn-submit', text:'سمق جواڤن'});
+  checkBtn.addEventListener('click', () => {
+    E.gradeSection(section.type, section.questions, state, fasal.id, section.id);
+    renderSection(fasal, section, state, container, onProgress);
+    onProgress();
+  });
+  const resetBtn = el('button', {type:'button', class:'btn btn-reset', text:'چوبا لاݢي'});
+  resetBtn.addEventListener('click', () => {
+    if (!confirm('ڤادم سموا جواڤن دالم بهاݢين اين؟')) return;
+    E.resetSection(section.questions, state, fasal.id, section.id);
+    renderSection(fasal, section, state, container, onProgress);
+    onProgress();
+  });
+  actions.appendChild(checkBtn);
+  actions.appendChild(resetBtn);
+  box.appendChild(actions);
+
+  container.innerHTML = '';
+  container.appendChild(box);
+}
+
+global.AkhlakRenderer = { el, isVisible, RENDERERS, renderSection };
+})(typeof window !== 'undefined' ? window : global);
+
+</script>
+<script>
+/* ============================================================
+   NOTES DATA — one entry per fasal.
+   **term** markers mark important points; app.js's hlText()
+   converts these to <mark class="hl"> at render time.
+   ============================================================ */
+const FASAL_META = [
+  { id:'f1', num:1, title:'المأثورات', subtitle:'Al-Ma\u02bcthurat Sughra' },
+  { id:'f2', num:2, title:'هوبوڠن دڠن مأنسي', subtitle:'Hubungan dengan Manusia' },
+  { id:'f3', num:3, title:'صفة محموده', subtitle:'Sifat Mahmudah' },
+  { id:'f4', num:4, title:'صفة مذمومه', subtitle:'Sifat Mazmumah' },
+  { id:'f5', num:5, title:'كونسيڤ محرم', subtitle:'Konsep Mahram' },
+  { id:'f6', num:6, title:'عورة', subtitle:'Aurat' },
+  { id:'f7', num:7, title:'مملیهارا کحرمتن دیري', subtitle:'Memelihara Kehormatan Diri' }
+];
+
+const NOTES = {
+
+f1: {
+  dalil: { ar:'اَلْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ الرَّحْمَٰنِ الرَّحِيمِ',
+           ref:'الفاتحة، اية 2-3', meaning:'سݢالا ڤوجي بݢي الله توهن سكالين عالم، يڠ مها ڤمورة لاݢي مها ڤڠاسيه.' },
+  ringkasan: '**مأثورات** ايالة هيمڤونن باچاءن ذكر دان دعاء يڠ دباچ اوليه رسول الله ﷺ دالم كهيدوڤن سهارين دان دعملكن اوليه ڤارا صحابة. **مأثورات صغرى** مراڠكومي اياة٢ ڤيليهن دري القرآن (**الفاتحة**، ڤرمولاءن دان ڤڠهابيسن سورة البقرة، **اية الكرسي**، دان **3 قل**) دإيكوتي دڠن سيري ذكر ڤاݢي دان ڤتڠ يڠ دهيمڤون اوليه **الإمام حسن البنا**.',
+  keyPoints: [
+    '**5 كلبيهن** ممباچ مأثورات: مڠيڠتكن الله سباݢاي ڤليندوڠ ترباءيك، ملقكن دري بيسيقن شيطان، منمبهكن كسدارن نعمة، مڠوكوهكن ايمان، دان مندتڠكن كورنياءن الله يڠ ملمڤه رواه.',
+    'اورتن باچاءن: تعوذ → **الفاتحة** → البقرة اية 1-5 → **اية الكرسي** → البقرة 256-257 → البقرة 284-286 → **3 قل** (الإخلاص، الفلق، الناس) → ذكر ڤاݢي/ڤتڠ → صلوات → استغفار.',
+    'ذكر ڤاݢي/ڤتڠ ترماسوق: اصبحنا واصبح الملك لله، اصبحنا على فطرة الإسلام، اللهم إني اصبحت اشهدك، **سيد الاستغفار**، دان ڤلباݢاي تعوذ درڤد كسل، بخيل، دان عذاب قبور.',
+    'مأثورات اداله سباهاڬين درڤد وارثن الإمام حسن البنا؛ تيدق سموا ذكر دداڠ اين ممڤوڽاءي سند/رواة يڠ دچتق دالم بوكو تيك، تتاڤي مقصودڽ تليه ثابت ملالوءي حديث٢ صحيح يڠ لاءين.'
+  ],
+  table: { title:'اورتن 3 قل', headers:['قل','سورة','ڤركارا يڠ دمهونكن ڤرليندوڠنڽ'],
+    rows:[['قل هو الله احد','الإخلاص','توحيد؛ ممبتولكن عقيدة'],
+          ['قل اعوذ برب الفلق','الفلق','كجاهتن مخلوق، غاسق، سيحر، دڠكي'],
+          ['قل اعوذ برب الناس','الناس','بيسيقن شيطان دالم دادا مأنسي']] },
+  mindmap: { root:'مأثورات صغرى', branches:[
+    { label:'اياة قرآن', leafs:['الفاتحة','البقرة 1-5','اية الكرسي','البقرة 256-257','البقرة 284-286','3 قل'] },
+    { label:'ذكر ڤاݢي/ڤتڠ', leafs:['اصبحنا واصبح الملك لله','اصبحنا على فطرة الإسلام','اللهم اني اصبحت اشهدك'] },
+    { label:'دعاء ڤرليندوڠن', leafs:['تعوذ درڤد كسل و بخيل','تعوذ درڤد عذاب قبور','سيد الاستغفار'] },
+    { label:'ڤنوتوڤ', leafs:['صلوات كأتس نبي','استغفار'] }
+  ]},
+  tip: 'مقنيمونيك اورتن باچاءن — "ف.ب.ك.ب.ق" : فاتحة، بقرة(اول)، كرسي، بقرة(اخير)، قل(٣). هافل هوروف ڤرتام سهاج، اونيت بليه دي\u200cاينڬت مڠيكوت اورتنڽ دالم بوكو.'
+},
+
+f2: {
+  dalil: { ar:'وَبِالْوَالِدَيْنِ إِحْسَانًا وَبِذِي الْقُرْبَىٰ وَالْيَتَامَىٰ وَالْمَسَاكِينِ وَالْجَارِ ذِي الْقُرْبَىٰ وَالْجَارِ الْجُنُبِ',
+           ref:'النساء، اية 36', meaning:'دان هندقله كامو بربوات باءيق كڤد ايبو باڤ، قوم قرابة، انق٢ يتيم، اورڠ٢ مسكين، جيران يڠ دكت ڤرتاليندارهڽ، دان جيران يڠ جاءوه.' },
+  ringkasan: '**جيران** ايالة اورڠ يڠ تيڠݢل بردكتن دڠن رومه كيت، دكيرا هيڠݢ رومه **كأ-40** دري ستياڤ ڤنجورو. جيران تربهاݢي كڤد **3**: جيران مشرك (**1 حق**)، جيران مسلم (**2 حق**)، دان جيران مسلم يڠ جوڬ قرابة (**3 حق**). فصل اين جوݢ مليڤوتي ادب برهوبوڠن دڠن مشاركت بوكن إسلام دمالسيا (ملايو، چينا، هيندو، إيبان، كدازن دان لاءين٢).',
+  keyPoints: [
+    'حق جيران: سلام، جواب جمڤوتن، منجڠوق ساكيت، تيدق مڠݢاڠݢو دڠن باو/بيسيڠ، كوڠسي كباهاݬياءن دان دوكچيتا، بنتو ممبيل/باءيقي رومه.',
+    'ادب دڠن بوكن إسلام: **تيدق ممقس اݢام**، مڠكل كباجيقن اونتوق كهرمونين، مڠهرمتي ڤرايان مريك تنڤا ايكوت سرتا دالم عبادة مريك.',
+    'حديث: "برڠسياڤ يڠ برايمان كڤد الله دان هاري اخيرت، هندقله ايا مموليكن جيرانڽ." (**الطبراني**، درڤد **كعب بن مالك** — سومبر دنياتكن دالم بوكو).'
+  ],
+  table: { title:'ڤمباهاڬين جيران', headers:['جنيس جيران','بيلاڠن حق'], rows:[['مشرك','1 (حق جيران سهاج)'],['مسلم','2 (حق جيران + حق إسلام)'],['مسلم دان قرابة','3 (حق جيران + إسلام + قرابة)']] },
+  mindmap: { root:'هوبوڠن دڠن مأنسي', branches:[
+    { label:'جيران', leafs:['تعريف: 40 رومه','جيران مشرك — 1 حق','جيران مسلم — 2 حق','جيران مسلم+قرابة — 3 حق'] },
+    { label:'ادب برجيرن', leafs:['سلام','جواب جمڤوتن','منجڠوق ساكيت','كوڠسي كباهاڬياءن/دوكچيتا'] },
+    { label:'مشاركت بوكن إسلام', leafs:['ملايو، چينا، هيندو، إيبان، كدازن','مڠكل كهرمونين','تيدق ممقس اݢام'] }
+  ]},
+  tip: 'اينݢت "40 رومه" دڠن ممبايڠكن ايمڤت ڤنجورو (كانن، كيري، هادڤن، بلاكڠ) دان اتس-باوه — سموا دكيرا حيڠݢ رومه كأ-40.'
+},
+
+f3: {
+  dalil: { ar:'وَلْتَكُن مِّنكُمْ أُمَّةٌ يَدْعُونَ إِلَى الْخَيْرِ وَيَأْمُرُونَ بِالْمَعْرُوفِ وَيَنْهَوْنَ عَنِ الْمُنكَرِ وَأُولَٰئِكَ هُمُ الْمُفْلِحُونَ',
+           ref:'ال عمران، اية 104', meaning:'دان هندقله اد دكالڠن كامو سݢولوڠن اومت يڠ مڠاجق كڤد كباجيقن، مڽوروه بربوات معروف دان ملارڠ درڤد ڤركارا موڠكر؛ مريكاله اورڠ٢ يڠ برجاي.' },
+  ringkasan: 'فصل اين مراڠكومي صفة٢ محموده: **عزة** (بڠݢ دڠن إسلام)، **مڠيڠت ماتي**، دان **صفة داعي** — يڠ ترباهاݢي كڤد **10 چيري**: علمو، صبر، تواضع، حكمة، مجاهدة، بر (بنر ڤركاتأن/عزم/عملن)، كاسيه ساياڠ، بلس كاسيهن، بركأول، بركهلوت (عزلة)، دان برديكاري.',
+  keyPoints: [
+    '**عزة**: راس موليا دان بڠݢ ترهادڤ كأݢوڠن إسلام؛ داليل سورة محمد اية 35.',
+    '**مڠيڠت ماتي**: جالن اونتوق زهد دان مڠيڠفكن معصية؛ چاراڽ ترماسوق زيارة قبور دان مڠيڠتي عذاب الله.',
+    'صفة علمو: حديث "برڠسياڤ يڠ الله كهندقي كباءيقنڽ، دجديقن فهم دالم اݢام" — حديث اين ماشهور صحيح ولاوڤون سومبرڽ تيدق دچتق دالم تيك بوكو.',
+    '**بر** (كبنرن) ممڤوڽاءي **3 دمنسي**: بنر دالم توتوركات، بنر دالم عزم، بنر دالم عملن.',
+    '**بركأول** تربهاڬي **3**: يڠ واجب (روكون إيمان)، يڠ معروف (اداة كبياساءن)، يڠ حرام (تخيول/شرك).',
+    'برخلوة (**عزلة**) دلاكوكن كتيك فتنة مڠهيمڤيت — چونتوهڽ اعتكاف نبي ﷺ سبلوم كدتڠن وحي.'
+  ],
+  table: { title:'10 صفة داعي', headers:['صفة','مقصود ريڠكس'],
+    rows:[['علمو','فهم اݢام سبلوم مڠاجق اورڠ لاءين'],['صبر','تاهن اوجين دالم دعوة'],['تواضع','رنده ديري، تيدق ممنداڠ رنده اورڠ لاءين'],
+          ['حكمة','بيجق مميليه چارا برداعوة'],['مجاهدة','برسوڠݢوه٢ دڠن هرتا دان ديري'],['بر','بنر كات، عزم، عملن'],
+          ['كاسيه ساياڠ','ڤريهاتين ترهادڤ مد\u02bfو'],['بلس كاسيهن','سيمڤاتي كأتس ڤندريتاءن اورڠ'],['بركأول','ڤستي دالم إيمان'],['برديكاري','تيدق برݢنتوڠ كڤد اورڠ لاءين']] },
+  mindmap: { root:'صفة محموده', branches:[
+    { label:'عزة', leafs:['بڠݢ دڠن إسلام','محمد 35'] },
+    { label:'مڠيڠت ماتي', leafs:['زهد','زيارة قبور','5 فاءيده'] },
+    { label:'صفة داعي (10)', leafs:['علمو، صبر، تواضع','حكمة، مجاهدة، بر','كاسيه ساياڠ، بلس كاسيهن','بركأول، برديكاري'] }
+  ]},
+  tip: 'مقنيمونيك 10 صفة داعي — "ع.ص.ت.ح.م.ب.ك.ب.ب.ب": علمو، صبر، تواضع، حكمة، مجاهدة، بر، كاسيه ساياڠ، بلس كاسيهن، بركأول، برديكاري. ايمڤت هوروف "ب" برتورت٢ (بر، بلس، بركأول، برديكاري) — اينڬت اد 4 "ب"!'
+},
+
+f4: {
+  dalil: { ar:'يُنَادُونَهُمْ أَلَمْ نَكُن مَّعَكُمْ ۖ قَالُوا بَلَىٰ وَلَٰكِنَّكُمْ فَتَنتُمْ أَنفُسَكُمْ وَتَرَبَّصْتُمْ وَارْتَبْتُمْ وَغَرَّتْكُمُ الْأَمَانِيُّ حَتَّىٰ جَاءَ أَمْرُ اللَّهِ وَغَرَّكُم بِاللَّهِ الْغَرُورُ',
+           ref:'الحديد، اية 14', meaning:'مريك (اورڠ منافق) منجريتكن اهل إيمان: "بوكنكه كامي برسام كامو؟" مريك منجواب: "بنر، تتاڤي كامو تله ممڤرداياكن ديري كامو سنديري."' },
+  ringkasan: 'صفة مذمومه يڠ دباهس: **غرور** (ترڤداي دڠن اڤ يڠ دهاصرتكن سهيڠݢ لوڤ اخيرت)، **اناني**/إيݢو، **عجب** (بڠݢ دڠن كلبيهن ديري سنديري)، **رياء** (ملاكوكن عبادة اونتوق دليهت اورڠ)، دان **تكبور** (ممبسركن ديري، منولق كبنرن).',
+  keyPoints: [
+    '**اناني**: حديث "تيدق برايمان سسأورڠ كامو سهيڠݢ ايا ممبچينتاءي اونتوق سودارڽ سڤرتي ايا ممبچينتاءي اونتوق ديريڽ سنديري" — دروايتكن اوليه **بخاري، احمد، ترمذي** درڤد **انس بن مالك** (سومبر جلس دالم بوكو).',
+    '**رياء** ممڤوڽاءي **5 كاتيݢوري**: رياء قد توبة، رياء قد فعاءين، رياء دالم اوچاڤن، رياء قد قربوتن، رياء كران راماي ڤڠيكوت.',
+    '**تكبور**: حديث "تيدق اكن ماسوق شرݢ سسأورڠ يڠ دالم هاتيڽ اد سبسر بيجي سواي دري صفة سومبوڠ" — ماشهور (مسلم)، تتاڤي تيدق دچتق سومبرڽ دالم تيك بوكو.',
+    'اورتن ببانن: **غرور → اناني/عجب/رياء/تكبور** (كسن٢ درڤد غرور).'
+  ],
+  table: { title:'4 صفة تربيت درڤد غرور', headers:['صفة','مقصود'],
+    rows:[['اناني (إيݢو)','ممنتيڠكن ديري سنديري سهاج'],['عجب','بڠݢ دڠن كلبيهن ديري'],['رياء','عبادة اونتوق دليهت اورڠ'],['تكبور','ممبسركن ديري، منولق كبنرن']] },
+  mindmap: { root:'صفة مذمومه', branches:[
+    { label:'غرور', leafs:['الحديد 14','ڤوڠكل كڤد صفة لاءين'] },
+    { label:'اناني', leafs:['حديث بخاري/احمد/ترمذي','انس بن مالك'] },
+    { label:'عجب', leafs:['التوبة 25'] },
+    { label:'رياء', leafs:['الماعون 4-6','5 كاتيݢوري'] },
+    { label:'تكبور', leafs:['النحل 23','حديث: زره سومبوڠ = تيدق مسوق شرݢ'] }
+  ]},
+  tip: 'اينݢت اورتن سبب-اكيبت: غرور اداله ڤوڠكل؛ اناني، عجب، رياء، تكبور اداله چابڠ٢ يڠ تومبوه دريڤداڽ. مقنيمونيك: "غ" ملاهيركن "٤ چابڠ برموله هوروف بربيذا" (ا-ع-ر-ت).'
+},
+
+f5: {
+  dalil: { ar:'حُرِّمَتْ عَلَيْكُمْ أُمَّهَاتُكُمْ وَبَنَاتُكُمْ وَأَخَوَاتُكُمْ وَعَمَّاتُكُمْ وَخَالَاتُكُمْ وَبَنَاتُ الْأَخِ وَبَنَاتُ الْأُخْتِ',
+           ref:'النساء، اية 23', meaning:'دحرمكن كأتس كامو (مڠهويني) ايبو٢ كامو، انق٢ ڤرمڤوان كامو، سودارا٢ ڤرمڤوان كامو، مق سودارا سبله باڤ، مق سودارا سبله ايبو، انق سودارا لالاكي (ڤرمڤوان)، دان انق سودارا ڤرمڤوان (ڤرمڤوان).' },
+  ringkasan: '**محرم** ايالة اورڠ يڠ حرام دكهويني بواة سلاما٢ڽ كران سبب٢ يڠ دأكوءي اوليه حكوم إسلام كران هوبوڠن ككلوارݢاءن يڠ راڤت. اد **3 سبب محرم**: **نسب** (كتورونن)، **ڤركهوينن**، دان **ڤڽوسوان** (رضاعة).',
+  keyPoints: [
+    'محرم نسب: ايبو/نيني، انق ڤرمڤوان/چوچو ڤرمڤوان، ادق-بردا ڤرمڤوان، انق سودارا ڤرمڤوان سبله باڤ/ايبو، مق سودارا سبله ايبو/باڤ.',
+    'محرم ڤركهوينن: ايبو/نيني مرتوا، انق تيري، ايستري باڤ/انق (ايبو تيري/منانتو).',
+    'محرم ڤڽوسوان: دحرمكن سكيراڽ ڤڽوسوان منچاڤاي **5 كالي كنياڠ**؛ حكومڽ سام سڤرتي حرمن كأتس نسب كتورونن.',
+    'داليل: **سورة النساء اية 23** (بوكن النحل ماهوڤون الأحزاب).'
+  ],
+  table: { title:'3 سبب محرم', headers:['سبب','چونتوه'],
+    rows:[['نسب','ايبو، انق، ادق-بردا، مق سودارا'],['ڤركهوينن','ايبو مرتوا، انق تيري، منانتو'],['ڤڽوسوان','سسورڠ يڠ منيوسو 5 كالي كنياڠ دالم تمڤوه 2 تاهون']] },
+  mindmap: { root:'محرم', branches:[
+    { label:'نسب', leafs:['ايبو/نيني','انق/چوچو ڤرمڤوان','ادق-بردا ڤرمڤوان','مق سودارا'] },
+    { label:'ڤركهوينن', leafs:['ايبو مرتوا','انق تيري','منانتو'] },
+    { label:'ڤڽوسوان', leafs:['5 كالي كنياڠ','دالم 2 تاهون'] }
+  ]},
+  tip: 'مقنيمونيك 3 سبب محرم — "ن.ڤ.ڤ": نسب، ڤركهوينن، ڤڽوسوان. سموا برموله دڠن هوروف "ن" اتاو "ڤ"!'
+},
+
+f6: {
+  dalil: { ar:'يَا أَيُّهَا النَّبِيُّ قُل لِّأَزْوَاجِكَ وَبَنَاتِكَ وَنِسَاءِ الْمُؤْمِنِينَ يُدْنِينَ عَلَيْهِنَّ مِن جَلَابِيبِهِنَّ',
+           ref:'الأحزاب، اية 59', meaning:'واهاي نبي، كاتاكنله كڤد ايستري٢مو، انق٢ ڤرمڤوانمو، دان ايستري٢ اورڠ يڠ برايمان: هندقله مريك مڠهولوركن جيلباب٢ مريك كأتس توبوه مريك.' },
+  ringkasan: '**عورة** ايالة بهاڬين بادن يڠ واجب دتوتوڤ. بڬي للاكي: **انتارا ڤوسة دان لوتوت**. بڬي ڤرمڤوان: **سلوروه بادن كچوالي موك دان تاڤق تاڠن**. حكوم منجاڬ عورة اداله **واجب**. فصل اين مليڤوتي ادب مليهت كڤد محرم، عجنبي، سسام ڤرمڤوان (مسلمة/كافرة)، للاكي-للاكي، امرد، كانق٢ (مڠيكوت ڤرينڬكة عمور)، دان كتيك ضرورة (ڤرودتن ڤرابتن).',
+  keyPoints: [
+    'عورة للاكي: انتارا ڤوسة-لوتوت. عورة ڤرمڤوان: سلوروه بادن كچوالي موك+تاڤق تاڠن.',
+    '**امرد**: ڤمودا يڠ بلوم تومبوه جاڠݢوت، بياساڽ اوسيا **10-15 تاهون**؛ مليهتڽ حرام جك ممباوا شهوة/فتنة.',
+    'عورة كانق٢: **0-4 تاهون** (بلوم دكيرا عورة)، **5-10 تاهون** (عورة تربتس ڤد كماءلوان سهاج)، سلڤس باليغ (سام دڠن ديواس).',
+    'كتيك ضرورة (ڤرودتن): دوكتور دبنركن مليهت عورة ڤسين ستاكت ڤرلو سهاج، اوتاماكن **دوكتور سجنس**، دان دسرتاءي سيكسين/محرم جك ممونڬكين.',
+    'داليل حكوم: **الأحزاب اية 59** (بوكن النور 30 — ايت داليل ملاراڠ ڤنداڠن).'
+  ],
+  table: { title:'عورة مڠيكوت عمور (كانق٢)', headers:['ڤرينڬكة عمور','حكوم عورة'],
+    rows:[['0-4 تاهون','بلوم دكيرا عورة'],['5-10 تاهون','عورة ترهد ڤد كماءلوان (هادڤن+بلاكڠ)'],['سلڤس باليغ','سام سڤرتي عورة اورڠ ديواس']] },
+  mindmap: { root:'عورة', branches:[
+    { label:'بهاڬين', leafs:['للاكي: ڤوسة-لوتوت','ڤرمڤوان: سلوروه كچوالي موك+تاڤق تاڠن'] },
+    { label:'ادب مليهت', leafs:['محرم — بهاڬين ظاهر سهاج','عجنبي — حرام ملاءينكن ضرورة','امرد — ايكوت شرط'] },
+    { label:'مڠيكوت عمور', leafs:['0-4: بلوم عورة','5-10: تربتس','سلڤس باليغ: سام ديواس'] },
+    { label:'ضرورة', leafs:['ڤرابتن — سكدر ڤرلو','دوكتور سجنس دأوتاماكن'] }
+  ]},
+  tip: 'اينڬت بهاڬين عورة دڠن "ڤ.ل" بڬي للاكي (ڤوسة كأ لوتوت)، دان "س.م.ت" بڬي ڤرمڤوان (سلوروه، ملاءينكن موك+تاڤق تاڠن).'
+},
+
+f7: {
+  dalil: { ar:'قُل لِّلْمُؤْمِنِينَ يَغُضُّوا مِنْ أَبْصَارِهِمْ وَيَحْفَظُوا فُرُوجَهُمْ ۚ ذَٰلِكَ أَزْكَىٰ لَهُمْ',
+           ref:'النور، اية 30', meaning:'كاتاكنله كڤد اورڠ٢ لالاكي يڠ برايمان: هندقله مريك منهنكن ڤانداڠن مريك دان منجاݢ كماءلوان مريك؛ يڠ دمكين ايت لبيه سوچي بڬي مريك.' },
+  ringkasan: 'مملیهارا كحرمتن ديري برماقصود مڠنل ڤستي دان مڽبوت ڤركارا يڠ ممليهارا كهرمتن ديري. **2 لڠكه اوتام**: **منجاءهي ڤنداڠن** (زينا مات) دان **منجاڬ عورة**. ملڠݢر ڤراتورن حجاب اداله **حرام** دان ممبوك ڤينتو كڤد دوسا يڠ لبيه بسر.',
+  keyPoints: [
+    '2 لڠكه ممليهارا كسوچين ديري: منجاءهي ڤنداڠن يڠ ممباوا فتنة، دان منجاݢ عورة.',
+    'حديث امرن: ڤرمڤوان يڠ ممكاي باون كموديان لالو دهادڤن اورڠ عجنبي اݢر مريك دافت هاروم باوڽ، دي دكيرا سباݬاي ڤرمڤوان يڠ برزنا (مات).',
+    'حكوم ملڠݬر حجاب: **حرام** — داليل النور اية 30.',
+    'كسن ملقساناكن حجاب: ستياڤ ڤركارا دكيرا عبادة، ترهيندر درڤد دوسا، سلامت درڤد فتنة دان بهاي.',
+    'كسن ملڠݬر حجاب: ممبوك ڤينتو كڤد دوسا يڠ لبيه بسر، تردده كڤد انچامن عذاب.'
+  ],
+  table: { title:'كسن ملقساناكن لاوان ملڠݬر حجاب', headers:['ملقساناكن','ملڠݬر'],
+    rows:[['دكيرا عبادة','ممبوك ڤينتو دوسا'],['ترهيندر درڤد دوسا','تردده كڤد عذاب'],['سلامت درڤد فتنة','ممودهكن فتنة برلاكو']] },
+  mindmap: { root:'مملیهارا كحرمتن ديري', branches:[
+    { label:'2 لڠكه', leafs:['منجاءهي ڤنداڠن زينا','منجاڬ عورة'] },
+    { label:'حكوم', leafs:['ملڠݬر حجاب = حرام','النور 30'] },
+    { label:'كسن', leafs:['ملقساناكن — عبادة، سلامت','ملڠݬر — دوسا، عذاب'] }
+  ]},
+  tip: 'اينڬت "2 لڠكه" دڠن ڤاسڠن: ڤنداڠن (مات) + عورة (بادن) — دوا ڤينتو ماسوق يڠ ڤرلو دجاڬ سرنتق.'
+}
+};
+
+</script>
+<script>
+const GLOSSARY = [
+  { term:'مأثورات', fasal:'f1', def:'هيمڤونن باچاءن ذكر دان دعاء يڠ دباچ اوليه رسول الله ﷺ دالم كهيدوڤن سهارين دان دعملكن اوليه ڤارا صحابة.' },
+  { term:'اية الكرسي', fasal:'f1', def:'اية 255 سورة البقرة، ممڤركاتاكن كأݢوڠن دان كأسأن الله يڠ مليڤوتي لاڠيت دان بومي.' },
+  { term:'تعوذ', fasal:'f1', def:'باچاءن ممهون ڤرليندوڠن الله درڤد شيطان يڠ درجم؛ اعوذ بالله من الشيطان الرجيم.' },
+  { term:'سيد الاستغفار', fasal:'f1', def:'دعاء استغفار يڠ ڤالڠ اوتام، برموله دڠن "اللهم انت ربي لا اله الا انت خلقتني".' },
+  { term:'صلوات', fasal:'f1', def:'ذكر برسلاوة كأتس نبي محمد ﷺ، چونتوهڽ اللهم صل على سيدنا محمد.' },
+  { term:'جيران', fasal:'f2', def:'اورڠ يڠ تيڠݢل بردكتن دڠن رومه كيت، دكيرا هيڠݢ رومه كأ-40 دري ستياڤ ڤنجورو.' },
+  { term:'مشرك', fasal:'f2', def:'اورڠ يڠ مڽكوتوكن الله دڠن سسواتو يڠ لاءين دالم عبادة.' },
+  { term:'حق', fasal:'f2', def:'ڤركارا يڠ واجب دتوناءيكن ترهادڤ سسأورڠ مڠيكوت كدودوقنڽ.' },
+  { term:'مشاركت بوكن إسلام', fasal:'f2', def:'ڤندودوق يڠ تيدق مڽنوتي اݢام إسلام دالم سبواه نݢارا، سڤرتي چينا، هيندو، إيبان، دان كدازن دمالسيا.' },
+  { term:'عزة', fasal:'f3', def:'راس موليا دان بڠݢ ترهادڤ كأݢوڠن إسلام، تيدق مندابيق-ايكوت كڤد اورڠ كافير.' },
+  { term:'داعي', fasal:'f3', def:'اورڠ يڠ مڠاجق مانسي كأرة كباجيقن دان ملارڠ درڤد كموڠكرن.' },
+  { term:'مجاهدة', fasal:'f3', def:'برسوڠݢوه٢ دالم برجواڠ دجالن الله دڠن هرتا دان ديري.' },
+  { term:'تواضع', fasal:'f3', def:'رنده ديري؛ تيدق ممنداڠ رنده اورڠ لاءين والاوڤون ممڤوڽاءي كلبيهن.' },
+  { term:'حكمة', fasal:'f3', def:'كبيجقساناءن دالم برتيندق دان ممبوات كڤوتوسن، ترماسوق چارا برداعوة.' },
+  { term:'بركأول', fasal:'f3', def:'كياكينن يڠ توهه، تيدق ݢنتر مڠهادڤي چابرن دالم مڠامالكن اݢام.' },
+  { term:'عزلة (برخلوة)', fasal:'f3', def:'مڠاسيڠكن ديري بواة سماس ترتنتو، بياساڽ كتيك فتنة مڠهيمڤيت اونتوق ممليهارا ديري دان اݢام.' },
+  { term:'برديكاري', fasal:'f3', def:'تيدق برݢنتوڠ كڤد اورڠ لاءين دالم مڽلسايكن اوروسن ديري سنديري.' },
+  { term:'غرور', fasal:'f4', def:'ترڤداي دڠن اڤ يڠ دهاصرتكن سهيڠݢ لوڤ اكن ديريڽ سنديري دان اخيرت.' },
+  { term:'اناني (إيݢو)', fasal:'f4', def:'ممنتيڠكن كڤنتيڠن ديري سنديري سهاج تنڤا مڠأمبيل كيرا اورڠ لاءين.' },
+  { term:'عجب', fasal:'f4', def:'راس بڠݢ دڠن كلبيهن ديري سنديري يڠ اد ڤد ديريڽ.' },
+  { term:'رياء', fasal:'f4', def:'ملاكوكن عبادة اتاو كباجيقن اونتوق دليهت اتاو دڤوجي اورڠ، بوكن كران الله.' },
+  { term:'تكبور', fasal:'f4', def:'ممبسركن ديري دان منولق كبنرن سرتا مماندڠ رنده اورڠ لاءين.' },
+  { term:'محرم', fasal:'f5', def:'اورڠ يڠ حرام دكهويني بواة سلاما٢ڽ كران سبب٢ يڠ دأكوءي حكوم إسلام.' },
+  { term:'نسب', fasal:'f5', def:'ڤرتاليان كتورونن، سڤرتي ايبو باڤ، انق، دان ادق-بردا.' },
+  { term:'رضاعة (ڤڽوسوان)', fasal:'f5', def:'ڤرتاليان يڠ تربينا هاسيل درڤد ڤڽوسوان سسأورڠ كانق، منچاڤاي 5 كالي كنياڠ دالم تمڤوه 2 تاهون.' },
+  { term:'عورة', fasal:'f6', def:'بهاڬين بادن يڠ واجب دتوتوڤ اتاو تيدق بوليه دديدهكن.' },
+  { term:'امرد', fasal:'f6', def:'ڤمودا يڠ بلوم تومبوه جاڠݢوت، بياساڽ برعمور انتارا 10 هيڠݢ 15 تاهون.' },
+  { term:'اجنبي', fasal:'f6', def:'اورڠ يڠ بوكن محرم، حرام دليهت عورتڽ ملاءينكن دالم كأداءن ضرورة.' },
+  { term:'ظاهير', fasal:'f6', def:'بهاڬين بادن محرم يڠ بوليه دليهت، سڤرتي موك، تاڠن، دان كاكي.' },
+  { term:'ضرورة', fasal:'f6', def:'كأداءن مندسق يڠ ممبنركن ڤركارا يڠ عادتڽ دلارڠ، سڤرتي ڤرابتن ڤرودتن.' },
+  { term:'حجاب', fasal:'f7', def:'توتوڤن اتاو ڤنوتوڤ عورة دان ديري يڠ دتوتوت كأتس مسلمة.' },
+  { term:'زينا', fasal:'f7', def:'ڤربواتن سومبڠ محرم دلوار ڤركهوينن يڠ صح، ترماسوق زينا مات (ڤنداڠن).' },
+  { term:'مروءة', fasal:'f7', def:'صفة مهابيتي دان مڠهرمتي ديري سنديري، منجاءهي ڤركارا يڠ ممأيبكن.' }
+];
+
+</script>
+<script>
+const QUIZ_F1 = { id:'f1', sections:[
+{ id:'s1', type:'objektif', badgeNum:1, title:'اوبجيكتيف', questions:[
+  { id:'q1', stem:'اڤاكه مقصود مأثورات؟', options:['هيمڤونن ذكر دان دعاء يڠ دباچ رسول الله ﷺ','كومڤولن حديث سهاج','ڤرينتاه صلاة فرض','نام سورة دالم القرآن'], correct:0, answerText:'هيمڤونن ذكر دان دعاء يڠ دباچ رسول الله ﷺ دان دعملكن ڤارا صحابة' },
+  { id:'q2', stem:'سياڤاكه يڠ مڠهيمڤونكن مأثورات صغرى؟', options:['الإمام حسن البنا','الإمام الشافعي','الإمام أحمد','الإمام مالك'], correct:0, answerText:'الإمام حسن البنا' },
+  { id:'q3', stem:'براڤ كلبيهن ممباچ مأثورات يڠ دسبوت دالم بوكو؟', options:['3','4','5','6'], correct:2, answerText:'5' },
+  { id:'q4', stem:'سورة اڤاكه يڠ دباچ سبايق ممولاكن مأثورات (سلڤس تعوذ)؟', options:['الإخلاص','الفاتحة','الناس','الفلق'], correct:1, answerText:'الفاتحة' },
+  { id:'q5', stem:'اية الكرسي تردڤت دالم سورة...', options:['ال عمران','النساء','البقرة','يس'], correct:2, answerText:'البقرة' },
+  { id:'q6', stem:'براڤ بواه قل يڠ دباچ دالم مأثورات صغرى؟', options:['1','2','3','4'], correct:2, answerText:'3' },
+  { id:'q7', stem:'ذكر "اصبحنا واصبح الملك لله" دباچ ڤد واقتو...', options:['ڤتڠ سهاج','مالم سهاج','ڤاݢي','تڠهاري'], correct:2, answerText:'ڤاݢي' },
+  { id:'q8', stem:'دعاء يڠ برموله "اللهم انت ربي لا اله الا انت خلقتني" دكنلي سباݢاي...', options:['سيد الاستغفار','سيد الدعاء','سيد الصلوات','سيد التسبيح'], correct:0, answerText:'سيد الاستغفار' }
+]},
+{ id:'s2', type:'betulSalah', badgeNum:2, title:'بتول اتاو ساله', questions:[
+  { id:'q1', stem:'مأثورات صغرى مراڠكومي اية٢ ڤيليهن درڤد القرآن.', correct:'betul', answerText:'بتول' },
+  { id:'q2', stem:'اية الكرسي اداله اية ترڤنجڠ دالم القرآن.', correct:'salah', answerText:'ساله — اية ترڤنجڠ اياله اية الدين (البقرة 282).' },
+  { id:'q3', stem:'3 قل يڠ دباچ ايالة الإخلاص، الفلق، دان الناس.', correct:'betul', answerText:'بتول' },
+  { id:'q4', stem:'ممباچ مأثورات دافت مڠوكوهكن ايمان.', correct:'betul', answerText:'بتول' },
+  { id:'q5', stem:'صلوات كأتس نبي بوكن سباهاڬين درڤد مأثورات.', correct:'salah', answerText:'ساله — صلوات ترماسوق دالم مأثورات صغرى.' },
+  { id:'q6', stem:'مأثورات هاڽ دباچ ڤد واقتو ڤاݢي سهاج.', correct:'salah', answerText:'ساله — اد ذكر ڤاݢي دان جوݢ ذكر ڤتڠ.' },
+  { id:'q7', stem:'سيد الاستغفار ترماسوق دالم مأثورات صغرى.', correct:'betul', answerText:'بتول' }
+]},
+{ id:'s3', type:'seretLepas', badgeNum:3, title:'سرت دان لڤس', questions:[
+  { id:'q1', stemParts:['مأثورات دهيمڤون اوليه الإمام ',''], blanks:['حسن البنا'], wordBank:['حسن البنا','الشافعي','الغزالي'], answerText:'حسن البنا' },
+  { id:'q2', stemParts:['اية الكرسي تردڤت دالم سورة ',''], blanks:['البقرة'], wordBank:['البقرة','ال عمران','النساء'], answerText:'البقرة' },
+  { id:'q3', stemParts:['ممباچ مأثورات دافت منمبهكن ',''], blanks:['ايمان'], wordBank:['ايمان','هرتا','ڤڠكت'], answerText:'ايمان' },
+  { id:'q4', stemParts:['قل هو الله احد اداله سورة ',''], blanks:['الإخلاص'], wordBank:['الإخلاص','الفلق','الناس'], answerText:'الإخلاص' },
+  { id:'q5', stemParts:['سيد الاستغفار برموله دڠن "اللهم انت ',' لا اله الا انت".'], blanks:['ربي'], wordBank:['ربي','عبدي','نبي'], answerText:'ربي' },
+  { id:'q6', stemParts:['ذكر ڤاݢي دان ڤتڠ ترماسوق دالم مأثورات ',''], blanks:['صغرى'], wordBank:['صغرى','كبرى','وسطى'], answerText:'صغرى' },
+  { id:'q7', stemParts:['تعوذ دباچ سبلوم ممولاكن ',''], blanks:['الفاتحة'], wordBank:['الفاتحة','استغفار','صلوات'], answerText:'الفاتحة' }
+]},
+{ id:'s4', type:'padankan', badgeNum:4, title:'ڤادنكن', questions:[
+  { id:'q1', pairs:[{left:'الإخلاص',right:'توحيد'},{left:'الفلق',right:'كجاهتن مخلوق'},{left:'الناس',right:'بيسيقن شيطان'}], answerText:'الإخلاص-توحيد، الفلق-كجاهتن مخلوق، الناس-بيسيقن شيطان' },
+  { id:'q2', pairs:[{left:'اصبحنا واصبح الملك لله',right:'ذكر ڤاݢي'},{left:'سيد الاستغفار',right:'دعاء ممهون كأمڤونن'}], answerText:'اصبحنا-ذكر ڤاݢي، سيد الاستغفار-دعاء ممهون كأمڤونن' },
+  { id:'q3', pairs:[{left:'الفاتحة',right:'ڤمبوك مأثورات'},{left:'صلوات',right:'ڤنوتوڤ مأثورات'}], answerText:'الفاتحة-ڤمبوك، صلوات-ڤنوتوڤ' },
+  { id:'q4', pairs:[{left:'الإمام حسن البنا',right:'ڤڠهيمڤون مأثورات'},{left:'اية الكرسي',right:'اية 255 البقرة'}], answerText:'حسن البنا-ڤڠهيمڤون، اية الكرسي-اية255 البقرة' },
+  { id:'q5', pairs:[{left:'تعوذ',right:'ممهون ڤرليندوڠن درڤد شيطان'},{left:'استغفار',right:'ممهون كأمڤونن'}], answerText:'تعوذ-ڤرليندوڠن، استغفار-كأمڤونن' },
+  { id:'q6', pairs:[{left:'مأثورات',right:'ذكر دان دعاء نبي'},{left:'صحابة',right:'مڠعملكن مأثورات'}], answerText:'مأثورات-ذكر/دعاء نبي، صحابة-مڠعملكن' }
+]},
+{ id:'s5', type:'susunUrutan', badgeNum:5, title:'سوسون مڠيكوت اوروتن', questions:[
+  { id:'q1', stem:'سوسون اورتن باچاءن دالم مأثورات صغرى:', order:['تعوذ','الفاتحة','اية الكرسي','3 قل'], answerText:'تعوذ → الفاتحة → اية الكرسي → 3 قل' },
+  { id:'q2', stem:'سوسون اورتن 3 قل مڠيكوت بوكو تيك:', order:['الإخلاص','الفلق','الناس'], answerText:'الإخلاص → الفلق → الناس' },
+  { id:'q3', stem:'سوسون اية٢ اڤي البقرة يڠ دباچ (مڠيكوت اورتن نومبور اية):', order:['البقرة 1-5','اية الكرسي (255)','البقرة 256-257','البقرة 284-286'], answerText:'1-5 → 255 → 256-257 → 284-286' },
+  { id:'q4', stem:'سوسون كلبيهن ممباچ مأثورات (مڠيكوت اورتن دالم بوكو):', order:['الله سباݢاي ڤليندوڠ ترباءيك','ملقكن دري بيسيقن شيطان','منمبهكن كسدارن نعمة','مڠوكوهكن ايمان','كورنياءن الله يڠ ملمڤه رواه'], answerText:'ڤليندوڠ ترباءيك → ملقكن بيسيقن شيطان → كسدارن نعمة → كوكوهكن ايمان → كورنياءن ملمڤه رواه' },
+  { id:'q5', stem:'سوسون ڤنوتوڤ مأثورات:', order:['صلوات كأتس نبي','استغفار'], answerText:'صلوات → استغفار' },
+  { id:'q6', stem:'سوسون واقتو باچاءن ذكر:', order:['ذكر ڤاݢي','ذكر ڤتڠ'], answerText:'ذكر ڤاݢي → ذكر ڤتڠ' }
+]},
+{ id:'s6', type:'kenalPasti', badgeNum:6, title:'كنل ڤستي', questions:[
+  { id:'q1', stem:'كنل ڤستي: يڠ مانكه بوكن سباهاڬين درڤد 3 قل؟', options:['الإخلاص','الفلق','الناس','الكوثر'], correct:3, answerText:'الكوثر — بوكن سباهاڬين درڤد 3 قل' },
+  { id:'q2', stem:'كنل ڤستي: يڠ مانكه بوكن كلبيهن ممباچ مأثورات؟', options:['مڠوكوهكن ايمان','منمبهكن هرتا','ملقكن بيسيقن شيطان','كسدارن نعمة'], correct:1, answerText:'منمبهكن هرتا — بوكن كلبيهن يڠ دسبوت' },
+  { id:'q3', stem:'كنل ڤستي: اية اڤاكه يڠ ممبيچاراكن كأݢوڠن الله يڠ مليڤوتي لاڠيت دان بومي؟', options:['اية الكرسي','اية الدين','اية الوضوء','اية القتال'], correct:0, answerText:'اية الكرسي' },
+  { id:'q4', stem:'كنل ڤستي: سياڤاكه يڠ مڠهيمڤونكن مأثورات صغرى؟', options:['الإمام الغزالي','الإمام حسن البنا','الإمام النووي','الإمام الطبري'], correct:1, answerText:'الإمام حسن البنا' },
+  { id:'q5', stem:'كنل ڤستي: يڠ مانكه چونتوه ذكر ڤاݢي؟', options:['اصبحنا واصبح الملك لله','اللهم بارك لنا','لا حول ولا قوة','سبحان الله وبحمده'], correct:0, answerText:'اصبحنا واصبح الملك لله' },
+  { id:'q6', stem:'كنل ڤستي: يڠ مانكه بوكن سبهاڬين درڤد باچاءن مأثورات؟', options:['الفاتحة','اية الكرسي','دعاء ڤوواسا','3 قل'], correct:2, answerText:'دعاء ڤوواسا — تيدق ترماسوق دالم مأثورات صغرى' }
+]},
+{ id:'s7', type:'kesanSebab', badgeNum:7, title:'كسن دان سبب', questions:[
+  { id:'q1', stem:'سسأورڠ يڠ مڠمالكن مأثورات سچارا برتروسن:', effectOptions:['ايمانڽ لبيه كوكوه','ايمانڽ منجادي لمه'], reasonOptions:['مأثورات مڠوكوهكن ايمان مڠيكوت بوكو تيك','مأثورات تيادا كسن كأتس ايمان'], correctEffect:0, correctReason:0, answerText:'كسن: ايمان لبيه كوكوه / سبب: مأثورات مڠوكوهكن ايمان' },
+  { id:'q2', stem:'سسأورڠ ممباچ تعوذ سبلوم ممولاكن مأثورات:', effectOptions:['مندافت ڤرليندوڠن درڤد شيطان','تيادا كسن'], reasonOptions:['تعوذ برماقصود ممهون ڤرليندوڠن درڤد شيطان','تعوذ هاڽ اداة سماتا'], correctEffect:0, correctReason:0, answerText:'كسن: مندافت ڤرليندوڠن / سبب: تعوذ برماقصود ممهون ڤرليندوڠن درڤد شيطان' },
+  { id:'q3', stem:'سسأورڠ ممباچ اية الكرسي سچارا برتروسن:', effectOptions:['مندافت كسدارن اكن كأݢوڠن الله','تيادا فاءيده'], reasonOptions:['اية الكرسي ممبيچاراكن كأݢوڠن دان كأسأن الله','اية الكرسي هاڽ چريتا سماتا'], correctEffect:0, correctReason:0, answerText:'كسن: كسدارن كأݢوڠن الله / سبب: اية الكرسي ممبيچاراكن كأݢوڠن الله' },
+  { id:'q4', stem:'سسأورڠ ممباچ سيد الاستغفار دڠن ڤنوه ڤڠهاياتن:', effectOptions:['مندافت كأمڤونن الله','تيادا كسن'], reasonOptions:['سيد الاستغفار اداله دعاء ممهون كأمڤونن يڠ اوتام','ايت هاڽ ذكر بياسا'], correctEffect:0, correctReason:0, answerText:'كسن: مندافت كأمڤونن / سبب: سيد الاستغفار اداله دعاء ممهون كأمڤونن يڠ اوتام' },
+  { id:'q5', stem:'سسأورڠ برصلوات كأتس نبي سباݢاي ڤنوتوڤ مأثورات:', effectOptions:['ممنوهي سونة ڤنوتوڤ ذكر','ملڠكڤكن ڤركارا يڠ تيدق دتونتوت'], reasonOptions:['صلوات اداله ڤنوتوڤ يڠ دسبوت دالم بوكو تيك','صلوات تيادا كأيتن دڠن مأثورات'], correctEffect:0, correctReason:0, answerText:'كسن: ممنوهي سونة ڤنوتوڤ / سبب: صلوات اداله ڤنوتوڤ يڠ دسبوت دالم بوكو تيك' },
+  { id:'q6', stem:'كانق٢ يڠ دأجر مأثورات سجق كچيل اوليه ايبو باڤ مريك:', effectOptions:['ممبنتوق تابيعت مڠيڠتي الله','ممبواڠ واقتو سماتا'], reasonOptions:['مأثورات ممبنتو مڠيڠتكن الله دالم كهيدوڤن سهارين','مأثورات تيادا فاءيده ڤنديديقن'], correctEffect:0, correctReason:0, answerText:'كسن: ممبنتوق تابيعت مڠيڠتي الله / سبب: مأثورات ممبنتو مڠيڠتكن الله دالم كهيدوڤن سهارين' }
+]},
+{ id:'s8', type:'klasifikasi', badgeNum:8, title:'كلاسيفيكاسي', questions:[
+  { id:'q1', binNames:['اية قرآن','ذكر/دعاء (بوكن اية قرآن)'],
+    items:[{label:'الفاتحة',bin:'اية قرآن'},{label:'اصبحنا واصبح الملك لله',bin:'ذكر/دعاء (بوكن اية قرآن)'},{label:'اية الكرسي',bin:'اية قرآن'},{label:'سيد الاستغفار',bin:'ذكر/دعاء (بوكن اية قرآن)'}],
+    answerText:'الفاتحة+اية الكرسي→اية قرآن؛ اصبحنا+سيد الاستغفار→ذكر/دعاء' },
+  { id:'q2', binNames:['3 قل','بوكن سباهاڬين 3 قل'],
+    items:[{label:'الإخلاص',bin:'3 قل'},{label:'الفلق',bin:'3 قل'},{label:'الناس',bin:'3 قل'},{label:'الكوثر',bin:'بوكن سباهاڬين 3 قل'}],
+    answerText:'الإخلاص+الفلق+الناس→3 قل؛ الكوثر→بوكن' },
+  { id:'q3', binNames:['ذكر ڤاݢي','ذكر ڤنوتوڤ'],
+    items:[{label:'اصبحنا واصبح الملك لله',bin:'ذكر ڤاݢي'},{label:'اصبحنا على فطرة الإسلام',bin:'ذكر ڤاݢي'},{label:'صلوات كأتس نبي',bin:'ذكر ڤنوتوڤ'}],
+    answerText:'اصبحنا واصبح الملك لله+اصبحنا على فطرة→ذكر ڤاݢي؛ صلوات→ذكر ڤنوتوڤ' },
+  { id:'q4', binNames:['كلبيهن مأثورات','بوكن كلبيهن مأثورات'],
+    items:[{label:'مڠوكوهكن ايمان',bin:'كلبيهن مأثورات'},{label:'منمبهكن هرتا',bin:'بوكن كلبيهن مأثورات'},{label:'ملقكن بيسيقن شيطان',bin:'كلبيهن مأثورات'}],
+    answerText:'مڠوكوهكن ايمان+ملقكن بيسيقن شيطان→كلبيهن؛ منمبهكن هرتا→بوكن' },
+  { id:'q5', binNames:['البقرة','سورة لاءين'],
+    items:[{label:'اية الكرسي',bin:'البقرة'},{label:'البقرة 1-5',bin:'البقرة'},{label:'الإخلاص',bin:'سورة لاءين'}],
+    answerText:'اية الكرسي+البقرة1-5→البقرة؛ الإخلاص→سورة لاءين' },
+  { id:'q6', binNames:['دباچ ڤد ڤرمولاءن','دباچ ڤد ڤڠهابيسن'],
+    items:[{label:'تعوذ',bin:'دباچ ڤد ڤرمولاءن'},{label:'الفاتحة',bin:'دباچ ڤد ڤرمولاءن'},{label:'استغفار',bin:'دباچ ڤد ڤڠهابيسن'}],
+    answerText:'تعوذ+الفاتحة→ڤرمولاءن؛ استغفار→ڤڠهابيسن' }
+]},
+{ id:'s9', type:'situasi', badgeNum:9, title:'سيتواسي', questions:[
+  { id:'q1', stem:'حافيظ مڠمالكن مأثورات ستياڤ ڤاݢي سبلوم ك سكوله. سسواتو هاري اي تيرݢسا-ݢسا دان ترلوڤ ممباچڽ. اڤاكه كسن يڠ موڠكين اي راساكن؟',
+    options:['تيادا ڤربيذاءن لاڠسوڠ','كورڠ راس ڤرليندوڠن دان كسدارن مڠيڠتي الله ڤد هاري ايت','منمبهكن ٤ ريڠكيت','ممبواتكنڽ لبيه ڤنتر'],
+    correct:1, answerText:'كورڠ راس ڤرليندوڠن دان كسدارن مڠيڠتي الله — سسواي دڠن كلبيهن مأثورات يڠ دأجر.' },
+  { id:'q2', stem:'نور تيدق ڤستي اورتن بينر اونتوق ممباچ 3 قل. مانكه اورتن يڠ بتول؟',
+    options:['الناس، الفلق، الإخلاص','الإخلاص، الفلق، الناس','الفلق، الإخلاص، الناس','تيادا اورتن ترتنتو'],
+    correct:1, answerText:'الإخلاص، الفلق، الناس — مڠيكوت اورتن دالم مأثورات صغرى.' },
+  { id:'q3', stem:'عمر ايڠين تاهو مقصود اية الكرسي سبلوم مڠهافلڽ. اڤاكه تيماڽ يڠ اوتام؟',
+    options:['كيصهن نبي٢','كأݢوڠن دان كأسأن الله','حكوم صلاة','ادب مقن'],
+    correct:1, answerText:'كأݢوڠن دان كأسأن الله يڠ مليڤوتي لاڠيت دان بومي.' },
+  { id:'q4', stem:'فرحانة ممباچ سيد الاستغفار ستياڤ ماس بڠون تيدور. اڤاكه توجوان اوتام دعاء ترسبوت؟',
+    options:['ممهون رزقي','ممهون كأمڤونن الله','ممهون كسيهاتن','ممهون كلولوسن ڤڤريقساءن'],
+    correct:1, answerText:'ممهون كأمڤونن الله.' },
+  { id:'q5', stem:'اظهار تيدق يقين اداكه صلوات ڤرلو دباچ سباݢاي سباهاڬين مأثورات. اڤاكه جواڤن يڠ تيڤت؟',
+    options:['تيدق ڤرلو لاڠسوڠ','يا، اياله ڤنوتوڤ مأثورات صغرى','هاڽ ڤد هاري جمعة','هاڽ اونتوق ديواس'],
+    correct:1, answerText:'يا، صلوات اداله ڤنوتوڤ مأثورات صغرى.' },
+  { id:'q6', stem:'راڤعة ممباندڠكن اية الكرسي دڠن اية الدين (البقرة 282) دان ترتاڽ٢ ڤربيذاءنڽ. اڤاكه فاكتا يڠ بتول؟',
+    options:['كدواڽ اية يڠ سام ڤنجڠڽ','اية الكرسي لبيه ڤنديق، اية الدين ترڤنجڠ دالم القرآن','كدواڽ تيادا كأيتن دڠن مأثورات','اية الدين لبيه ڤنديق'],
+    correct:1, answerText:'اية الكرسي رلاتيف ڤنديق؛ اية الدين (282) اداله اية ترڤنجڠ دالم القرآن.' },
+  { id:'q7', stem:'صالح ايڠين مڠأجر ادقڽ يڠ برعمور 6 تاهون ممباچ مأثورات. اڤاكه لڠكه ڤرتام يڠ ڤاليڠ سسواي؟',
+    options:['ترس مڠهافل اية الكرسي يڠ ڤنجڠ','مولاكن دڠن الفاتحة دان 3 قل يڠ ڤنديق','مولاكن دڠن اية الدين','لڠكاءي تعوذ ترس ك استغفار'],
+    correct:1, answerText:'مولاكن دڠن الفاتحة دان 3 قل — ڤنديق دان سسواي بواة ڤمولا.' }
+]},
+{ id:'s10', type:'kesanSalah', badgeNum:10, title:'كسن ساله', questions:[
+  { id:'q1', sentenceWords:['مأثورات','دهيمڤون','اوليه','الإمام','الشافعي'], wrongIndex:4, correctReplacement:0,
+    replacementOptions:['حسن البنا','الغزالي','النووي'], answerText:'مأثورات دهيمڤون اوليه الإمام حسن البنا (بوكن "الشافعي").' },
+  { id:'q2', sentenceWords:['3','قل','ايالة','الإخلاص،','الفلق،','دان','الكوثر'], wrongIndex:6, correctReplacement:2,
+    replacementOptions:['المسد','الناس','الفيل'], answerText:'3 قل ايالة الإخلاص، الفلق، دان الناس (بوكن "الكوثر").' },
+  { id:'q3', sentenceWords:['اية','الكرسي','تردڤت','دالم','سورة','ال','عمران'], wrongIndex:5, correctReplacement:1,
+    replacementOptions:['الأنعام','البقرة','مريم'], answerText:'اية الكرسي تردڤت دالم سورة البقرة (بوكن "ال عمران").' },
+  { id:'q4', sentenceWords:['ممباچ','مأثورات','ملمهكن','ايمان'], wrongIndex:2, correctReplacement:1,
+    replacementOptions:['منمبهكن','ممبواڠ','مڠهيلڠكن'], answerText:'ممباچ مأثورات منمبهكن ايمان (بوكن "ملمهكن").' },
+  { id:'q5', sentenceWords:['سيد','الاستغفار','برموله','دڠن','بسم','الله'], wrongIndex:4, correctReplacement:1,
+    replacementOptions:['اعوذ بالله','اللهم انت ربي','الحمد لله'], answerText:'سيد الاستغفار برموله دڠن "اللهم انت ربي" (بوكن "بسم الله").' },
+  { id:'q6', sentenceWords:['ذكر','ڤاݢي','دباچ','ڤد','واقتو','تڠهاري'], wrongIndex:5, correctReplacement:0,
+    replacementOptions:['ڤاݢي','مالم','لواه'], answerText:'ذكر ڤاݢي دباچ ڤد واقتو ڤاݢي (بوكن "تڠهاري").' }
+]}
+]};
+
+</script>
+<script>
+const QUIZ_F2 = { id:'f2', sections:[
+{ id:'s1', type:'objektif', badgeNum:1, title:'اوبجيكتيف', questions:[
+  { id:'q1', stem:'اڤاكه مقصود جيران؟', options:['اورڠ يڠ تيڠݢل بردكتن دڠن رومه كيت','اورڠ يڠ سام سكوله دڠن كيت','اورڠ يڠ سام ڤكرجاءن دڠن كيت','اهلي كلوارݢ سهاج'], correct:0, answerText:'اورڠ يڠ تيڠݢل بردكتن دڠن رومه كيت' },
+  { id:'q2', stem:'هيڠݢ رومه كأ-براڤاكه دكيرا سباݢاي جيران؟', options:['10','20','40','100'], correct:2, answerText:'40' },
+  { id:'q3', stem:'داليل حق جيران ترداڤت دالم سورة...', options:['النساء اية 36','البقرة اية 36','ال عمران اية 36','النور اية 36'], correct:0, answerText:'النساء اية 36' },
+  { id:'q4', stem:'براڤ حق يڠ اد ڤد جيران مسلم يڠ جوݢ قرابة؟', options:['1','2','3','4'], correct:2, answerText:'3' }
+]},
+{ id:'s2', type:'betulSalah', badgeNum:2, title:'بتول اتاو ساله', questions:[
+  { id:'q1', stem:'جيران مشرك تيادا حق لاڠسوڠ كأتس كيت.', correct:'salah', answerText:'ساله — جيران مشرك تتڤ ممڤوڽاءي 1 حق، يائيت حق جيران.' },
+  { id:'q2', stem:'كيت دݢالقكن ممقس اݢام كڤد جيران بوكن إسلام.', correct:'betul', answerText:'بتول' },
+  { id:'q3', stem:'مڠهرمتي ڤرايان جيران بوكن إسلام برماقصود ايكوت سرتا دالم عبادة مريك.', correct:'salah', answerText:'ساله — مڠهرمتي تيدق برماقصود ايكوت سرتا دالم عبادة مريك.' },
+  { id:'q4', stem:'جيران مسلم يڠ بوكن قرابة ممڤوڽاءي 2 حق.', correct:'betul', answerText:'بتول — حق جيران + حق إسلام.' }
+]},
+{ id:'s3', type:'seretLepas', badgeNum:3, title:'سرت دان لڤس', questions:[
+  { id:'q1', stemParts:['جيران ',' هاڽ ممڤوڽاءي 1 حق سهاج.'], blanks:['مشرك'], wordBank:['مشرك','مسلم','قرابة'], answerText:'مشرك' },
+  { id:'q2', stemParts:['حديث حق جيران دروايتكن اوليه ',''], blanks:['الطبراني'], wordBank:['الطبراني','البخاري','مسلم'], answerText:'الطبراني' },
+  { id:'q3', stemParts:['مشاركت بوكن إسلام دمالسيا ترماسوق چينا، هيندو، إيبان دان ',''], blanks:['كدازن'], wordBank:['كدازن','عرب','ترکي'], answerText:'كدازن' },
+  { id:'q4', stemParts:['كيت ڤرلو مڠكل ',' دڠن جيران بوكن إسلام.'], blanks:['كهرمونين'], wordBank:['كهرمونين','ڤرمشوهن','ڤرسايڠن'], answerText:'كهرمونين' }
+]},
+{ id:'s4', type:'padankan', badgeNum:4, title:'ڤادنكن', questions:[
+  { id:'q1', pairs:[{left:'جيران مشرك',right:'1 حق'},{left:'جيران مسلم',right:'2 حق'},{left:'جيران مسلم+قرابة',right:'3 حق'}], answerText:'مشرك-1 حق، مسلم-2 حق، مسلم+قرابة-3 حق' },
+  { id:'q2', pairs:[{left:'سلام',right:'ادب برجيرن'},{left:'مڠكل كهرمونين',right:'ادب دڠن بوكن إسلام'}], answerText:'سلام-ادب برجيرن، مڠكل كهرمونين-ادب دڠن بوكن إسلام' },
+  { id:'q3', pairs:[{left:'النساء 36',right:'داليل حق جيران'},{left:'الطبراني',right:'ڤرياوي حديث جيران'}], answerText:'النساء 36-داليل حق جيران، الطبراني-ڤرياوي حديث جيران' },
+  { id:'q4', pairs:[{left:'كعب بن مالك',right:'ڤراوي حديث'},{left:'40 رومه',right:'هد جيران'}], answerText:'كعب بن مالك-ڤراوي حديث، 40 رومه-هد جيران' }
+]},
+{ id:'s5', type:'susunUrutan', badgeNum:5, title:'سوسون مڠيكوت اوروتن', questions:[
+  { id:'q1', stem:'سوسون ڤمباهاڬين جيران مڠيكوت بيلاڠن حق (سديكيت ك باڽق):', order:['جيران مشرك','جيران مسلم','جيران مسلم دان قرابة'], answerText:'جيران مشرك → جيران مسلم → جيران مسلم دان قرابة' },
+  { id:'q2', stem:'سوسون لڠكه بيلا جيران ساكيت:', order:['مڠتاهوءي جيران ساكيت','منجڠوق','مندعاكن كسمبوهن'], answerText:'مڠتاهوءي جيران ساكيت → منجڠوق → مندعاكن كسمبوهن' },
+  { id:'q3', stem:'سوسون مڠيكوت اورتن يڠ دسبوت دالم اية النساء 36 (اول سكالي دهولو):', order:['ايبو باڤ','قوم قرابة','انق يتيم','جيران'], answerText:'ايبو باڤ → قوم قرابة → انق يتيم → جيران' },
+  { id:'q4', stem:'سوسون لڠكه ممبينا هوبوڠن باءيق دڠن جيران باهارو:', order:['ممبري سلام ڤركنالن','سالينڠ منولوڠ','مڠكلكن هوبوڠن جاڠكا ڤنجڠ'], answerText:'ممبري سلام ڤركنالن → سالينڠ منولوڠ → مڠكلكن هوبوڠن جاڠكا ڤنجڠ' }
+]},
+{ id:'s6', type:'kenalPasti', badgeNum:6, title:'كنل ڤستي', questions:[
+  { id:'q1', stem:'كنل ڤستي: يڠ مانكه بوكن ادب برجيرن؟', options:['ممبري سلام','مڠݢاڠݢو دڠن اساڤ رمهن','منجڠوق يڠ ساكيت','كوڠسي كباهاݬياءن'], correct:1, answerText:'مڠݢاڠݢو دڠن اساڤ رمهن — بوكن ادب برجيرن' },
+  { id:'q2', stem:'كنل ڤستي: يڠ مانكه چونتوه مشاركت بوكن إسلام دمالسيا؟', options:['ملايو','چينا','عرب سعودي','ڤاكستان'], correct:1, answerText:'چينا' },
+  { id:'q3', stem:'كنل ڤستي: يڠ مانكه بوكن ادب دڠن بوكن إسلام؟', options:['مڠكل كهرمونين','ممقس اݢام','برسيكڤ عادل','مڠهرمتي ڤرايان مريك'], correct:1, answerText:'ممقس اݢام — بوكن ادب دڠن بوكن إسلام' },
+  { id:'q4', stem:'كنل ڤستي: سيڤاكه ڤراوي حديث تنتڠ حق جيران يڠ دسبوت دالم بوكو؟', options:['انس بن مالك','كعب بن مالك','ابو هريرة','ابن عباس'], correct:1, answerText:'كعب بن مالك' }
+]},
+{ id:'s7', type:'kesanSebab', badgeNum:7, title:'كسن دان سبب', questions:[
+  { id:'q1', stem:'كيت مڠهرمتي ڤرايان جيران بوكن إسلام تنڤا ايكوت سرتا دالم عبادة مريك:', effectOptions:['كهرمونين ترجاݢ','ڤرمشوهن برلاكو'], reasonOptions:['مڠهرمتي بوكن برماقصود ريدا دڠن اݢام مريك','كيت واجب مڠيكوت اݢام مريك'], correctEffect:0, correctReason:0, answerText:'كسن: كهرمونين ترجاݢ / سبب: مڠهرمتي بوكن برماقصود ريدا دڠن اݢام مريك' },
+  { id:'q2', stem:'جيران مسلم يڠ جوݢ قرابة كيت ديابايكن حقڽ:', effectOptions:['برداوسا دان ممڤوتوسكن سيلاتوره حيم','تيادا كسن'], reasonOptions:['ايا ممڤوڽاءي 3 حق سكاليݢوس','ايا هاڽ ممڤوڽاءي 1 حق'], correctEffect:0, correctReason:0, answerText:'كسن: برداوسا دان ممڤوتوسكن سيلاتوره حيم / سبب: ايا ممڤوڽاءي 3 حق سكاليݢوس' },
+  { id:'q3', stem:'كيت ممبنتو ممبيل رومه جيران يڠ روبوه:', effectOptions:['ممنوهي ادب برجيرن','ملڠݬر حق جيران'], reasonOptions:['ممبنتو دالم كسوسهن اداله سباهاڬين ادب جيران','ايت تيادا كأيتن دڠن اݢام'], correctEffect:0, correctReason:0, answerText:'كسن: ممنوهي ادب برجيرن / سبب: ممبنتو دالم كسوسهن اداله سباهاڬين ادب جيران' },
+  { id:'q4', stem:'سسأورڠ ترس-منروس مڠݢاڠݢو جيرانڽ دڠن بيسيڠ ڤد وقتو مالم:', effectOptions:['ملڠݬر حق جيران','منمبهكن ڤهالا'], reasonOptions:['حديث نبي ملارڠ ممبريكن مضرة كڤد جيران','تيادا حديث برايتن'], correctEffect:0, correctReason:0, answerText:'كسن: ملڠݬر حق جيران / سبب: حديث نبي ملارڠ ممبريكن مضرة كڤد جيران' }
+]},
+{ id:'s8', type:'klasifikasi', badgeNum:8, title:'كلاسيفيكاسي', questions:[
+  { id:'q1', binNames:['ادب برجيرن','ادب دڠن بوكن إسلام'],
+    items:[{label:'ممبري سلام',bin:'ادب برجيرن'},{label:'مڠكل كهرمونين',bin:'ادب دڠن بوكن إسلام'},{label:'منجڠوق ساكيت',bin:'ادب برجيرن'},{label:'تيدق ممقس اݢام',bin:'ادب دڠن بوكن إسلام'}],
+    answerText:'ممبري سلام+منجڠوق ساكيت→ادب برجيرن؛ مڠكل كهرمونين+تيدق ممقس اݢام→ادب دڠن بوكن إسلام' },
+  { id:'q2', binNames:['1 حق','2 حق','3 حق'],
+    items:[{label:'جيران مشرك',bin:'1 حق'},{label:'جيران مسلم',bin:'2 حق'},{label:'جيران مسلم+قرابة',bin:'3 حق'}],
+    answerText:'مشرك→1 حق؛ مسلم→2 حق؛ مسلم+قرابة→3 حق' },
+  { id:'q3', binNames:['دݢالقكن','دبنركن'],
+    items:[{label:'ممقس اݢام',bin:'دݢالقكن'},{label:'مڠهرمتي ڤرايان تنڤا ايكوت عبادة',bin:'دبنركن'},{label:'برلاكو عادل',bin:'دبنركن'}],
+    answerText:'ممقس اݢام→دݢالقكن؛ مڠهرمتي ڤرايان+برلاكو عادل→دبنركن' },
+  { id:'q4', binNames:['حق دري النساء 36','بوكن حق دري اية اين'],
+    items:[{label:'انق يتيم',bin:'حق دري النساء 36'},{label:'قوم قرابة',bin:'حق دري النساء 36'},{label:'رقن نياݢ',bin:'بوكن حق دري اية اين'}],
+    answerText:'انق يتيم+قوم قرابة→حق دري النساء 36؛ رقن نياݢ→بوكن' }
+]},
+{ id:'s9', type:'situasi', badgeNum:9, title:'سيتواسي', questions:[
+  { id:'q1', stem:'جيران عمر برااݢام هيندو مڠادكن ڤرايان ديڤاولي. عمر دجمڤوت هادير. اڤاكه سيكڤ ترباءيك؟',
+    options:['مڽرتاءي سموا عبادة مريك','حادير مڽمڤايكن اوچاڤن تهنيه تنڤا ايكوت سرتا دالم عبادة','تيدق ڤرلو حادير لاڠسوڠ','مڽوروه مريك برهنتي مڠادكن ڤرايان'],
+    correct:1, answerText:'حادير مڽمڤايكن اوچاڤن تهنيه تنڤا ايكوت سرتا دالم عبادة مريك.' },
+  { id:'q2', stem:'جيران سبله رومه سيتي اداله سڤوڤوڽ سنديري. براڤ حقكه يڠ اد ڤد جيران اين؟',
+    options:['1 حق سهاج','2 حق (جيران+إسلام)','3 حق (جيران+إسلام+قرابة)','تيادا حق لاڠسوڠ'],
+    correct:2, answerText:'3 حق — جيران، إسلام، دان قرابة سكاليݢوس.' },
+  { id:'q3', stem:'رومه احمد سلالو بيسيڠ ڤد لواه مالم سهيڠݢ مڠݢاڠݢو جيرانڽ يڠ ساكيت. اڤاكه ايت ملڠݬر حق جيران؟',
+    options:['يا، كران ممبريكن مضرة كڤد جيران','تيدق، كران رومهڽ سنديري','يا، تتاڤي هاڽ ڤد هاري چوتي','تيدق، سلاݢي تيدق دلاڤورکن'],
+    correct:0, answerText:'يا — ممبريكن مضرة كڤد جيران ملڠݬر حقڽ.' },
+  { id:'q4', stem:'كيلوارݢ فاطمة ممبنتو ممباڠون سمولا رومه جيرانڽ يڠ تربكر. اڤاكه اين منچرمينكن؟',
+    options:['ادب برجيرن يڠ باءيق','ڤمبازيرن هرتا','چمڤور تاڠن اوروسن اورڠ لاءين','تيادا كأيتن دڠن اݢام'],
+    correct:0, answerText:'ادب برجيرن يڠ باءيق — ممبنتو جيران دالم كسوسهن.' }
+]},
+{ id:'s10', type:'kesanSalah', badgeNum:10, title:'كسن ساله', questions:[
+  { id:'q1', sentenceWords:['جيران','مشرك','تيادا','سبارڠ','حق'], wrongIndex:2, correctReplacement:0,
+    replacementOptions:['ممڤوڽاءي 1','ممڤوڽاءي 5','ممڤوڽاءي 0'], answerText:'جيران مشرك ممڤوڽاءي 1 حق (بوكن "تيادا سبارڠ حق").' },
+  { id:'q2', sentenceWords:['كيت','ڤرلو','ممقس','اݢام','كڤد','جيران','بوكن','إسلام'], wrongIndex:2, correctReplacement:1,
+    replacementOptions:['مڠاجق','تيدق ممقس','ممقسا'], answerText:'كيت تيدق ممقس اݢام كڤد جيران بوكن إسلام (بوكن "ممقس").' },
+  { id:'q3', sentenceWords:['هد','جيران','دكيرا','هيڠݢ','رومه','كأ-10'], wrongIndex:5, correctReplacement:2,
+    replacementOptions:['كأ-20','كأ-30','كأ-40'], answerText:'هد جيران دكيرا هيڠݢ رومه كأ-40 (بوكن "كأ-10").' },
+  { id:'q4', sentenceWords:['حديث','حق','جيران','دروايتكن','اوليه','مسلم'], wrongIndex:5, correctReplacement:1,
+    replacementOptions:['بخاري','الطبراني','ابو داود'], answerText:'حديث حق جيران دروايتكن اوليه الطبراني (بوكن "مسلم").' }
+]}
+]};
+
+</script>
+<script>
+const QUIZ_F3 = { id:'f3', sections:[
+{ id:'s1', type:'objektif', badgeNum:1, title:'اوبجيكتيف', questions:[
+  { id:'q1', stem:'اڤاكه مقصود عزة؟', options:['راس موليا دان بڠݢ ترهادڤ كأݢوڠن إسلام','راس تاكوت بربوات باءيق','راس مالو برجومڤا اورڠ','راس دڠكي كڤد كأوڠن اورڠ'], correct:0, answerText:'راس موليا دان بڠݢ ترهادڤ كأݢوڠن إسلام' },
+  { id:'q2', stem:'داليل عزة ترداڤت دالم سورة...', options:['محمد اية 35','ال عمران اية 104','التوبة اية 25','النحل اية 23'], correct:0, answerText:'محمد اية 35' },
+  { id:'q3', stem:'براڤ چيري صفة داعي يڠ دسبوت دالم بوكو؟', options:['5','8','10','12'], correct:2, answerText:'10' },
+  { id:'q4', stem:'"بر" (كبنرن) ممڤوڽاءي براڤ دمنسي؟', options:['2','3','4','5'], correct:1, answerText:'3 (بنر كات، عزم، عملن)' },
+  { id:'q5', stem:'بركأول تربهاڬي كڤد براڤ كاتيݢوري؟', options:['2','3','4','5'], correct:1, answerText:'3 (واجب، معروف، حرام)' },
+  { id:'q6', stem:'برخلوة (عزلة) دلاكوكن كتيك...', options:['فتنة مڠهيمڤيت','هاري چوتي','ماس چوتي سكوله','برسوكان'], correct:0, answerText:'فتنة مڠهيمڤيت' },
+  { id:'q7', stem:'اڤاكه فاءيده مڠيڠت ماتي؟', options:['منمبهكن هرتا','منولوڠ زهد دان مڠيڠفكن معصية','ممبواتكن ديري تاكوت سهاج','تيادا فاءيده'], correct:1, answerText:'منولوڠ زهد دان مڠيڠفكن معصية' },
+  { id:'q8', stem:'حديث تنتڠ صفة علمو مڽبوت الله ممبريكن كفهمن اݢام كڤد سسياڤ يڠ...', options:['الله كهندقي كباءيقنڽ','كايا رايا','ڤنتر برچاكڤ','راجين برنياݢ'], correct:0, answerText:'الله كهندقي كباءيقنڽ' },
+  { id:'q9', stem:'مجاهدة برماقصود...', options:['برسوڠݢوه٢ دڠن هرتا دان ديري دجالن الله','برايستيراحت سڤنوهڽ','منجاءهي سموا اورڠ','ممنتيڠكن ديري سنديري'], correct:0, answerText:'برسوڠݢوه٢ دڠن هرتا دان ديري دجالن الله' }
+]},
+{ id:'s2', type:'betulSalah', badgeNum:2, title:'بتول اتاو ساله', questions:[
+  { id:'q1', stem:'عزة برماقصود بڠݢ دڠن كأݢوڠن إسلام.', correct:'betul', answerText:'بتول' },
+  { id:'q2', stem:'تواضع برماقصود ممنداڠ رنده اورڠ لاءين.', correct:'salah', answerText:'ساله — تواضع برماقصود رنده ديري، بوكن ممنداڠ رنده اورڠ لاءين.' },
+  { id:'q3', stem:'حكمة برماقصود بيجق مميليه چارا برداعوة.', correct:'betul', answerText:'بتول' },
+  { id:'q4', stem:'بر (كبنرن) هاڽ ممڤوڽاءي 1 دمنسي سهاج.', correct:'salah', answerText:'ساله — بر ممڤوڽاءي 3 دمنسي.' },
+  { id:'q5', stem:'بركأول يڠ واجب ترماسوق روكون إيمان.', correct:'betul', answerText:'بتول' },
+  { id:'q6', stem:'برديكاري برماقصود برݢنتوڠ ڤنوه كڤد اورڠ لاءين.', correct:'salah', answerText:'ساله — برديكاري برماقصود تيدق برݢنتوڠ كڤد اورڠ لاءين.' },
+  { id:'q7', stem:'مڠيڠت ماتي دافت منولوڠ سسأورڠ منجادي زهد.', correct:'betul', answerText:'بتول' },
+  { id:'q8', stem:'صفة داعي هاڽ ترماسوق 5 چيري سهاج.', correct:'salah', answerText:'ساله — ترماسوق 10 چيري.' }
+]},
+{ id:'s3', type:'seretLepas', badgeNum:3, title:'سرت دان لڤس', questions:[
+  { id:'q1', stemParts:['',' برماقصود راس موليا ترهادڤ كأݢوڠن إسلام.'], blanks:['عزة'], wordBank:['عزة','عجب','رياء'], answerText:'عزة' },
+  { id:'q2', stemParts:['',' برماقصود رنده ديري.'], blanks:['تواضع'], wordBank:['تواضع','تكبور','عجب'], answerText:'تواضع' },
+  { id:'q3', stemParts:['',' برماقصود برسوڠݢوه٢ دڠن هرتا دان ديري.'], blanks:['مجاهدة'], wordBank:['مجاهدة','صبر','حكمة'], answerText:'مجاهدة' },
+  { id:'q4', stemParts:['داليل عزة ترداڤت دالم سورة ',''], blanks:['محمد'], wordBank:['محمد','النحل','التوبة'], answerText:'محمد' },
+  { id:'q5', stemParts:['بر ممڤوڽاءي 3 دمنسي: كات، عزم، دان ',''], blanks:['عملن'], wordBank:['عملن','هرتا','فيكيرن'], answerText:'عملن' },
+  { id:'q6', stemParts:['عزلة دلاكوكن كتيك ',' مڠهيمڤيت.'], blanks:['فتنة'], wordBank:['فتنة','ڤرايان','چوتي'], answerText:'فتنة' },
+  { id:'q7', stemParts:['بركأول تربهاڬي كڤد 3: واجب، معروف، دان ',''], blanks:['حرام'], wordBank:['حرام','سنة','مباح'], answerText:'حرام' },
+  { id:'q8', stemParts:['',' برماقصود تيدق برݢنتوڠ كڤد اورڠ لاءين.'], blanks:['برديكاري'], wordBank:['برديكاري','اناني','عزة'], answerText:'برديكاري' }
+]},
+{ id:'s4', type:'padankan', badgeNum:4, title:'ڤادنكن', questions:[
+  { id:'q1', pairs:[{left:'علمو',right:'فهم اݢام'},{left:'صبر',right:'تاهن اوجين'},{left:'تواضع',right:'رنده ديري'}], answerText:'علمو-فهم اݢام، صبر-تاهن اوجين، تواضع-رنده ديري' },
+  { id:'q2', pairs:[{left:'حكمة',right:'بيجق مميليه چارا'},{left:'مجاهدة',right:'برسوڠݢوه٢'},{left:'بر',right:'بنر كات/عزم/عملن'}], answerText:'حكمة-بيجق، مجاهدة-برسوڠݢوه٢، بر-بنر' },
+  { id:'q3', pairs:[{left:'كاسيه ساياڠ',right:'ڤريهاتين ترهادڤ مدعو'},{left:'بلس كاسيهن',right:'سيمڤاتي كأتس ڤندريتاءن'}], answerText:'كاسيه ساياڠ-ڤريهاتين، بلس كاسيهن-سيمڤاتي' },
+  { id:'q4', pairs:[{left:'بركأول',right:'ڤستي دالم إيمان'},{left:'برديكاري',right:'تيدق برݢنتوڠ اورڠ لاءين'}], answerText:'بركأول-ڤستي إيمان، برديكاري-تيدق برݢنتوڠ' },
+  { id:'q5', pairs:[{left:'عزة',right:'محمد 35'},{left:'دعوة',right:'ال عمران 104'}], answerText:'عزة-محمد35، دعوة-ال عمران104' },
+  { id:'q6', pairs:[{left:'واجب',right:'روكون إيمان'},{left:'معروف',right:'اداة كبياساءن'},{left:'حرام',right:'تخيول/شرك'}], answerText:'واجب-روكون إيمان، معروف-اداة كبياساءن، حرام-تخيول/شرك' },
+  { id:'q7', pairs:[{left:'عزلة',right:'مڠاسيڠكن ديري كتيك فتنة'},{left:'مڠيڠت ماتي',right:'زهد دان مڠيڠفكن معصية'}], answerText:'عزلة-مڠاسيڠكن ديري، مڠيڠت ماتي-زهد' },
+  { id:'q8', pairs:[{left:'اعتكاف نبي',right:'چونتوه عزلة'},{left:'زيارة قبور',right:'چارا مڠيڠت ماتي'}], answerText:'اعتكاف نبي-چونتوه عزلة، زيارة قبور-چارا مڠيڠت ماتي' },
+  { id:'q9', pairs:[{left:'صفة داعي',right:'10 چيري'},{left:'بر',right:'3 دمنسي'}], answerText:'صفة داعي-10 چيري، بر-3 دمنسي' }
+]},
+{ id:'s5', type:'susunUrutan', badgeNum:5, title:'سوسون مڠيكوت اوروتن', questions:[
+  { id:'q1', stem:'سوسون 10 صفة داعي مڠيكوت اورتن دالم بوكو:', order:['علمو','صبر','تواضع','حكمة','مجاهدة','بر','كاسيه ساياڠ','بلس كاسيهن','بركأول','برديكاري'], answerText:'علمو → صبر → تواضع → حكمة → مجاهدة → بر → كاسيه ساياڠ → بلس كاسيهن → بركأول → برديكاري' },
+  { id:'q2', stem:'سوسون 3 دمنسي بر:', order:['بنر توتوركات','بنر عزم','بنر عملن'], answerText:'بنر توتوركات → بنر عزم → بنر عملن' },
+  { id:'q3', stem:'سوسون 3 كاتيݢوري بركأول:', order:['يڠ واجب','يڠ معروف','يڠ حرام'], answerText:'يڠ واجب → يڠ معروف → يڠ حرام' },
+  { id:'q4', stem:'سوسون تيماء يڠ دباهس دالم فصل اين:', order:['عزة','مڠيڠت ماتي','صفة داعي'], answerText:'عزة → مڠيڠت ماتي → صفة داعي' },
+  { id:'q5', stem:'سوسون لڠكه برداعوة يڠ باءيق:', order:['ممڤوڽاءي علمو','برسيكڤ حكمة','برصبر مڠهادڤي اوجين'], answerText:'ممڤوڽاءي علمو → برسيكڤ حكمة → برصبر مڠهادڤي اوجين' },
+  { id:'q6', stem:'سوسون فاءيده مڠيڠت ماتي:', order:['زهد ترهادڤ دنيا','مڠيڠفكن معصية','ممرسياڤكن بكلن اخيرت'], answerText:'زهد ترهادڤ دنيا → مڠيڠفكن معصية → ممرسياڤكن بكلن اخيرت' },
+  { id:'q7', stem:'سوسون 5 چيري ڤرتام صفة داعي:', order:['علمو','صبر','تواضع','حكمة','مجاهدة'], answerText:'علمو → صبر → تواضع → حكمة → مجاهدة' },
+  { id:'q8', stem:'سوسون 5 چيري ترأخير صفة داعي:', order:['بر','كاسيه ساياڠ','بلس كاسيهن','بركأول','برديكاري'], answerText:'بر → كاسيه ساياڠ → بلس كاسيهن → بركأول → برديكاري' }
+]},
+{ id:'s6', type:'kenalPasti', badgeNum:6, title:'كنل ڤستي', questions:[
+  { id:'q1', stem:'كنل ڤستي: يڠ مانكه بوكن سباهاڬين درڤد 10 صفة داعي؟', options:['علمو','صبر','رياء','حكمة'], correct:2, answerText:'رياء — ايت صفة مذمومه، بوكن صفة داعي' },
+  { id:'q2', stem:'كنل ڤستي: يڠ مانكه چونتوه حكمة؟', options:['بيجق مميليه واقتو دان چارا برداعوة','ممرليهتكن كمرهن كتيك دإينݢتكن','ممبواڠ واقتو','ممنتيڠكن ديري سنديري'], correct:0, answerText:'بيجق مميليه واقتو دان چارا برداعوة' },
+  { id:'q3', stem:'كنل ڤستي: يڠ مانكه ترماسوق بركأول يڠ واجب؟', options:['روكون إيمان','اداة كبياساءن','ڤرچاي تخيول','ڤرچاي شرك'], correct:0, answerText:'روكون إيمان' },
+  { id:'q4', stem:'كنل ڤستي: يڠ مانكه چونتوه عزلة (برخلوة)؟', options:['اعتكاف نبي سبلوم كدتڠن وحي','ڤرݢي ك ڤسر رامي٢','مڠادكن مجليس بسر','برݢاءول دڠن سموا اورڠ'], correct:0, answerText:'اعتكاف نبي سبلوم كدتڠن وحي' },
+  { id:'q5', stem:'كنل ڤستي: يڠ مانكه بوكن دمنسي بر (كبنرن)؟', options:['بنر توتوركات','بنر عزم','بنر عملن','بنر كأياكينن اورڠ لاءين'], correct:3, answerText:'بنر كأياكينن اورڠ لاءين — بوكن دمنسي بر' },
+  { id:'q6', stem:'كنل ڤستي: يڠ مانكه چونتوه صفة برديكاري؟', options:['مڽلسايكن توݢسن سنديري تنڤا مڠهارڤ اورڠ لاءين','سنتياس مميتا بنتوان','برݢنتوڠ ڤد راكن','تيدق مهو بروسها'], correct:0, answerText:'مڽلسايكن توݢسن سنديري تنڤا مڠهارڤ اورڠ لاءين' },
+  { id:'q7', stem:'كنل ڤستي: سورة اڤاكه منجادي داليل عزة؟', options:['محمد','يس','مريم','الكهف'], correct:0, answerText:'محمد' },
+  { id:'q8', stem:'كنل ڤستي: يڠ مانكه چونتوه صفة كاسيه ساياڠ سأورڠ داعي؟', options:['ڤريهاتين ترهادڤ كباجيقن مدعو','ممنتيڠكن ديري سنديري','مماكسا مدعو','ممبنچي مدعو يڠ إينكار'], correct:0, answerText:'ڤريهاتين ترهادڤ كباجيقن مدعو' }
+]},
+{ id:'s7', type:'kesanSebab', badgeNum:7, title:'كسن دان سبب', questions:[
+  { id:'q1', stem:'ادم ساتو٢ڽ ڤلاجر مسلم دسكولهڽ يڠ برڤواسا سنة إسنين-خميس. اڤابيلا راكن سكلسڽ ممڤرسوالكن امالنڽ، ادم منجواب دڠن تنڠ دان تروس براءمل:', effectOptions:['ادم مڠمالكن صفة عزة','ادم مڠمالكن صفة رياء'], reasonOptions:['عزة برماقصود راس موليا ترهادڤ كأݢوڠن إسلام، تيدق ترڤڠاروه ڤنداڠن اورڠ لاءين','رياء برماقصود بعبادة اونتوق دليهت اورڠ'], correctEffect:0, correctReason:0, answerText:'كسن: مڠمالكن عزة / سبب: راس موليا ترهادڤ كأݢوڠن إسلام، تيدق ترڤڠاروه ڤنداڠن اورڠ' },
+  { id:'q2', stem:'ستياڤ كالي هانا ترݢودا مهو ممبلي براڠ مواه يڠ تيدق دڤرلوكن، اي ترايڠت بهاوا سݢالا هرتا اكن دتيڠݢلكن سلڤس ماتي، لالو اي ممباتلكن هاسراتڽ:', effectOptions:['هانا منجادي لبيه زهد ترهادڤ دنيا','هانا منجادي لبيه تمق دنيا'], reasonOptions:['مڠيڠت ماتي منولوڠ زهد دان مڠيڠفكن معصية','مڠيڠت ماتي تيادا كسن'], correctEffect:0, correctReason:0, answerText:'كسن: منجادي لبيه زهد / سبب: مڠيڠت ماتي منولوڠ زهد دان مڠيڠفكن معصية' },
+  { id:'q3', stem:'سبلوم مڽمڤايكن كوليه تنتڠ صلاة كڤد جيران٢ڽ، اوستاذ فردوس مڠهابيسكن برتاهون٢ ممڤلاجري كتاب٢ فقه دان برتاڽ كڤد ݢورو٢ڽ:', effectOptions:['اوستاذ فردوس مڠمالكن صفة علمو','اوستاذ فردوس مڠمالكن صفة عجب'], reasonOptions:['صفة علمو برماقصود فهم اݢام سبلوم مڠاجق اورڠ لاءين','عجب تيادا كأيتن دڠن ڤرسدياءن دعوة'], correctEffect:0, correctReason:0, answerText:'كسن: مڠمالكن علمو / سبب: فهم اݢام سبلوم مڠاجق اورڠ لاءين' },
+  { id:'q4', stem:'والاوڤون سرڠ دإيجيق دان دڤنداڠ سروڠ اوليه سباهاڬين ڤندودوق كامڤوڠ، اوستاذة سلمى تروس ملاوت رومه ك رومه اونتوق برداعوة تنڤا برڤوتوس اس:', effectOptions:['اوستاذة سلمى مڠمالكن صفة صبر','اوستاذة سلمى مڠمالكن صفة تكبور'], reasonOptions:['صفة صبر برماقصود تاهن مڠهادڤي اوجين دالم دعوة','تكبور تيادا كأيتن دڠن كتاهنن مڠهادڤي إيجيقن'], correctEffect:0, correctReason:0, answerText:'كسن: مڠمالكن صبر / سبب: تاهن مڠهادڤي اوجين دالم دعوة' },
+  { id:'q5', stem:'إنچيق رحيم ممبريكن سباهاڬين بسر سيمڤانڽ دان ملواڠكن هوجوڠ ميڠݢوڽ ممبنتو ممبينا سوراو باهارو دكامڤوڠڽ، والاوڤون كلوارݢاڽ تيدق سلسا دڠن ڤڠوربنن واقتو ايت:', effectOptions:['إنچيق رحيم مڠمالكن مجاهدة','إنچيق رحيم مڠمالكن كبخيلن'], reasonOptions:['مجاهدة برماقصود برسوڠݢوه٢ دڠن هرتا دان ديري دجالن الله','كبخيلن برلاوانن دڠن ڤڠوربنن'], correctEffect:0, correctReason:0, answerText:'كسن: مڠمالكن مجاهدة / سبب: برسوڠݢوه٢ دڠن هرتا دان ديري دجالن الله' },
+  { id:'q6', stem:'والاوڤون منجادي ڤلاجر ترباءيك ڤرينڬكت دايره، فريد تتڤ دودوق برسام دان ممبنتو راكن٢ يڠ لمه تنڤا ممنداڠ رنده كبوليهن مريك:', effectOptions:['فريد مڠمالكن تواضع','فريد مڠمالكن تكبور'], reasonOptions:['تواضع برماقصود رنده ديري تنڤا ممنداڠ رنده اورڠ لاءين','تكبور برماقصود ممبسركن ديري'], correctEffect:0, correctReason:0, answerText:'كسن: مڠمالكن تواضع / سبب: رنده ديري تنڤا ممنداڠ رنده اورڠ لاءين' },
+  { id:'q7', stem:'والاوڤون ڤرنياݢاءن كلوارݢاڽ مڠالمي كروݢين بسر تاهون اين، ڤوان زينب تتڤ تنڠ كران يقين رزقي دان كتنتوان الله تيدق اكن ترسصر:', effectOptions:['ڤوان زينب مڠمالكن سفت بركأول (يقين)','ڤوان زينب مڠمالكن سيكڤ كراݢوان'], reasonOptions:['بركأول برماقصود كياكينن يڠ توهه، تيدق ݢنتر مڠهادڤي چابرن','كراݢوان برلاوانن دڠن كياكينن'], correctEffect:0, correctReason:0, answerText:'كسن: مڠمالكن بركأول / سبب: كياكينن يڠ توهه، تيدق ݢنتر مڠهادڤي چابرن' },
+  { id:'q8', stem:'كتيك ميديا سوسيال دڤنوهي فتنة دان ڤربالهن يڠ ممباكر امره راماي اورڠ، حافظ ممليه منجاءهكن ديري سكتيك درڤد سموا ڤلاتفورم ايت اونتوق منڠڠكن هاتي دان فوكوس بعبادة:', effectOptions:['حافظ مڠمالكن عزلة (برخلوة)','حافظ مڠمالكن سفت اناني'], reasonOptions:['عزلة دلاكوكن اونتوق ممليهارا ديري دان اݢام كتيك فتنة مڠهيمڤيت','اناني تيادا كأيتن دڠن ممليهارا اݢام'], correctEffect:0, correctReason:0, answerText:'كسن: مڠمالكن عزلة / سبب: ممليهارا ديري دان اݢام كتيك فتنة مڠهيمڤيت' }
+]},
+{ id:'s8', type:'klasifikasi', badgeNum:8, title:'كلاسيفيكاسي', questions:[
+  { id:'q1', binNames:['5 چيري ڤرتام','5 چيري ترأخير'],
+    items:[{label:'علمو',bin:'5 چيري ڤرتام'},{label:'صبر',bin:'5 چيري ڤرتام'},{label:'بر',bin:'5 چيري ترأخير'},{label:'برديكاري',bin:'5 چيري ترأخير'}],
+    answerText:'علمو+صبر→5 ڤرتام؛ بر+برديكاري→5 ترأخير' },
+  { id:'q2', binNames:['بر (كبنرن)','بوكن دمنسي بر'],
+    items:[{label:'بنر توتوركات',bin:'بر (كبنرن)'},{label:'بنر عزم',bin:'بر (كبنرن)'},{label:'بنر عملن',bin:'بر (كبنرن)'},{label:'بنر ڤنمڤيلن',bin:'بوكن دمنسي بر'}],
+    answerText:'توتوركات+عزم+عملن→بر؛ ڤنمڤيلن→بوكن' },
+  { id:'q3', binNames:['بركأول يڠ واجب','بركأول يڠ معروف','بركأول يڠ حرام'],
+    items:[{label:'روكون إيمان',bin:'بركأول يڠ واجب'},{label:'اداة كبياساءن',bin:'بركأول يڠ معروف'},{label:'تخيول/شرك',bin:'بركأول يڠ حرام'}],
+    answerText:'روكون إيمان→واجب؛ اداة كبياساءن→معروف؛ تخيول/شرك→حرام' },
+  { id:'q4', binNames:['صفة محموده','صفة مذمومه'],
+    items:[{label:'عزة',bin:'صفة محموده'},{label:'تواضع',bin:'صفة محموده'},{label:'تكبور',bin:'صفة مذمومه'},{label:'رياء',bin:'صفة مذمومه'}],
+    answerText:'عزة+تواضع→محموده؛ تكبور+رياء→مذمومه' },
+  { id:'q5', binNames:['تيماء عزة','تيماء مڠيڠت ماتي'],
+    items:[{label:'راس بڠݢ دڠن إسلام',bin:'تيماء عزة'},{label:'زيارة قبور',bin:'تيماء مڠيڠت ماتي'},{label:'زهد ترهادڤ دنيا',bin:'تيماء مڠيڠت ماتي'}],
+    answerText:'راس بڠݢ→عزة؛ زيارة قبور+زهد→مڠيڠت ماتي' },
+  { id:'q6', binNames:['چيري داعي ترهادڤ ديري سنديري','چيري داعي ترهادڤ مدعو'],
+    items:[{label:'علمو',bin:'چيري داعي ترهادڤ ديري سنديري'},{label:'صبر',bin:'چيري داعي ترهادڤ ديري سنديري'},{label:'كاسيه ساياڠ',bin:'چيري داعي ترهادڤ مدعو'},{label:'بلس كاسيهن',bin:'چيري داعي ترهادڤ مدعو'}],
+    answerText:'علمو+صبر→ترهادڤ ديري سنديري؛ كاسيه ساياڠ+بلس كاسيهن→ترهادڤ مدعو' },
+  { id:'q7', binNames:['برداليل محمد 35','برداليل ال عمران 104'],
+    items:[{label:'عزة',bin:'برداليل محمد 35'},{label:'مڠاجق كأرة كباجيقن (دعوة)',bin:'برداليل ال عمران 104'}],
+    answerText:'عزة→محمد35؛ دعوة→ال عمران104' },
+  { id:'q8', binNames:['دلاكوكن كتيك فتنة','دلاكوكن ستياڤ ماس'],
+    items:[{label:'عزلة (برخلوة)',bin:'دلاكوكن كتيك فتنة'},{label:'مڠيڠت ماتي',bin:'دلاكوكن ستياڤ ماس'},{label:'برديكاري',bin:'دلاكوكن ستياڤ ماس'}],
+    answerText:'عزلة→كتيك فتنة؛ مڠيڠت ماتي+برديكاري→ستياڤ ماس' },
+  { id:'q9', binNames:['اداله سباهاڬين 10 صفة داعي','بوكن سباهاڬين 10 صفة داعي'],
+    items:[{label:'حكمة',bin:'اداله سباهاڬين 10 صفة داعي'},{label:'مجاهدة',bin:'اداله سباهاڬين 10 صفة داعي'},{label:'غرور',bin:'بوكن سباهاڬين 10 صفة داعي'}],
+    answerText:'حكمة+مجاهدة→سباهاڬين 10 صفة داعي؛ غرور→بوكن' }
+]},
+{ id:'s9', type:'situasi', badgeNum:9, title:'سيتواسي', questions:[
+  { id:'q1', stem:'إحسان تيدق مالو مڠاكوءي دان ممڤرتاهنكن ايدنتيتيڽ سباݢاي مسلم والاوڤون براد دكالڠن مينوريتي. اڤاكه صفة اين؟',
+    options:['عزة','عجب','رياء','غرور'], correct:0, answerText:'عزة — راس موليا دان بڠݢ ترهادڤ كأݢوڠن إسلام.' },
+  { id:'q2', stem:'رقن سكلاس زهرة سلالو مڠيڠتكن ديريڽ تنتڠ كماتين ستياڤ كالي ترلينتس نياة بروات معصية. اڤاكه توجوان امالن اين؟',
+    options:['اونتوق منجادي تاكوت سماتا','اونتوق زهد دان مڠيڠفكن معصية','اونتوق ممبواڠ واقتو','تيادا توجوان'],
+    correct:1, answerText:'اونتوق زهد دان مڠيڠفكن معصية — فاءيده مڠيڠت ماتي.' },
+  { id:'q3', stem:'اوستاذ حكيم مميليه واقتو دان چارا يڠ سسواي سبلوم منيمڤايكن نصيحة كڤد مورد٢ڽ. اڤاكه صفة داعي اين؟',
+    options:['حكمة','صبر','علمو','مجاهدة'], correct:0, answerText:'حكمة — بيجق مميليه واقتو دان چارا برداعوة.' },
+  { id:'q4', stem:'سأورڠ رماج ممبنتو مڽلسايكن كرجا رومهڽ سنديري تنڤا مميتا بنتوان اورڠ توا سماس ممڤو ملاكوكنڽ. اڤاكه صفة اين؟',
+    options:['برديكاري','اناني','عجب','غرور'], correct:0, answerText:'برديكاري — تيدق برݢنتوڠ كڤد اورڠ لاءين.' },
+  { id:'q5', stem:'حليم ممبنتو راكنڽ ممفهمي ڤلاجرن دڠن ڤنوه كساباران والاوڤون داءون برتاڽ برأولڠ كالي. اڤاكه صفة اين؟',
+    options:['صبر دان كاسيه ساياڠ','تكبور','عجب','رياء'], correct:0, answerText:'صبر دان كاسيه ساياڠ — تاهن اوجين سرتا ڤريهاتين ترهادڤ اورڠ لاءين.' },
+  { id:'q6', stem:'ستله ممليهت راكنڽ دلاندا مصيبة، عائشة براس سيمڤاتي دان چوبا مرينڬنكن ڤندريتاءنڽ. اڤاكه صفة اين؟',
+    options:['بلس كاسيهن','عجب','غرور','تكبور'], correct:0, answerText:'بلس كاسيهن — سيمڤاتي كأتس ڤندريتاءن اورڠ.' },
+  { id:'q7', stem:'خالد يقين دڠن كتتڤن الله والاوڤون منمڤوه كسوليتن هيدوڤ يڠ برات. اڤاكه صفة اين؟',
+    options:['بركأول','كراݢوان','غرور','عجب'], correct:0, answerText:'بركأول — كياكينن يڠ توهه، تيدق ݢنتر مڠهادڤي چابرن.' },
+  { id:'q8', stem:'سكومڤولن ڤلاجر مڠاسيڠكن ديري بواة سماس اونتوق فوكوس بعبادة كتيك فتنة عالم مايا مڠهيمڤيت. اڤاكه اين منچرمينكن؟',
+    options:['عزلة (برخلوة)','اناني','تكبور','رياء'], correct:0, answerText:'عزلة — مڠاسيڠكن ديري كتيك فتنة اونتوق ممليهارا ديري دان اݢام.' },
+  { id:'q9', stem:'داعي مودا سلالو منڤتي جنجيڽ دان برلاكو جوجور دالم ستياڤ اوچاڤن دان تيندقنڽ. اڤاكه صفة اين؟',
+    options:['بر (كبنرن)','رياء','غرور','عجب'], correct:0, answerText:'بر — بنر دالم توتوركات، عزم، دان عملن.' }
+]},
+{ id:'s10', type:'kesanSalah', badgeNum:10, title:'كسن ساله', questions:[
+  { id:'q1', sentenceWords:['عزة','برماقصود','رنده','ديري','ترهادڤ','إسلام'], wrongIndex:2, correctReplacement:1,
+    replacementOptions:['بسر','بڠݢ','مالو'], answerText:'عزة برماقصود بڠݢ ترهادڤ إسلام (بوكن "رنده ديري").' },
+  { id:'q2', sentenceWords:['داليل','عزة','ترداڤت','دالم','سورة','يس'], wrongIndex:5, correctReplacement:0,
+    replacementOptions:['محمد','الفيل','الكوثر'], answerText:'داليل عزة ترداڤت دالم سورة محمد (بوكن "يس").' },
+  { id:'q3', sentenceWords:['صفة','داعي','ممڤوڽاءي','5','چيري'], wrongIndex:3, correctReplacement:2,
+    replacementOptions:['8','10','12'], answerText:'صفة داعي ممڤوڽاءي 10 چيري (بوكن "5").' },
+  { id:'q4', sentenceWords:['بر','(كبنرن)','ممڤوڽاءي','1','دمنسي'], wrongIndex:3, correctReplacement:1,
+    replacementOptions:['2','3','4'], answerText:'بر ممڤوڽاءي 3 دمنسي (بوكن "1").' },
+  { id:'q5', sentenceWords:['بركأول','تربهاڬي','كڤد','2','كاتيݢوري'], wrongIndex:3, correctReplacement:1,
+    replacementOptions:['2','3','4'], answerText:'بركأول تربهاڬي كڤد 3 كاتيݢوري (بوكن "2").' },
+  { id:'q6', sentenceWords:['حكمة','برماقصود','تيدق','ڤدولي','واقتو','برداعوة'], wrongIndex:2, correctReplacement:0,
+    replacementOptions:['بيجق مميليه','لڠسوڠ لوڤا','منولق'], answerText:'حكمة برماقصود بيجق مميليه واقتو برداعوة (بوكن "تيدق ڤدولي واقتو").' },
+  { id:'q7', sentenceWords:['برديكاري','برماقصود','برݢنتوڠ','ڤنوه','كڤد','اورڠ'], wrongIndex:2, correctReplacement:0,
+    replacementOptions:['تيدق برݢنتوڠ','سنتياس مميتا','مڠهارڤكن'], answerText:'برديكاري برماقصود تيدق برݢنتوڠ كڤد اورڠ (بوكن "برݢنتوڠ ڤنوه").' },
+  { id:'q8', sentenceWords:['عزلة','دلاكوكن','ستياڤ','هاري','تنڤا','سبب'], wrongIndex:2, correctReplacement:0,
+    replacementOptions:['كتيك فتنة مڠهيمڤيت','ڤد هاري چوتي','سلڤس مكن'], answerText:'عزلة دلاكوكن كتيك فتنة مڠهيمڤيت (بوكن "ستياڤ هاري تنڤا سبب").' },
+  { id:'q9', sentenceWords:['مڠيڠت','ماتي','ممبواتكن','سسأورڠ','لبيه','تمق','دنيا'], wrongIndex:5, correctReplacement:1,
+    replacementOptions:['ݢمرلڤ','زهد','رقوس'], answerText:'مڠيڠت ماتي ممبواتكن سسأورڠ لبيه زهد ترهادڤ دنيا (بوكن "تمق دنيا").' }
+]}
+]};
+
+</script>
+<script>
+const QUIZ_F4 = { id:'f4', sections:[
+{ id:'s1', type:'objektif', badgeNum:1, title:'اوبجيكتيف', questions:[
+  { id:'q1', stem:'اڤاكه مقصود غرور؟', options:['ترڤداي دڠن اڤ يڠ دهاصرتكن سهيڠݢ لوڤ اخيرت','راجين بعبادة','برسيكڤ رنده ديري','ممبنتو اورڠ لاءين'], correct:0, answerText:'ترڤداي دڠن اڤ يڠ دهاصرتكن سهيڠݢ لوڤ اخيرت' },
+  { id:'q2', stem:'داليل غرور ترداڤت دالم سورة...', options:['الحديد اية 14','التوبة اية 25','الماعون اية 4','النحل اية 23'], correct:0, answerText:'الحديد اية 14' },
+  { id:'q3', stem:'براڤ صفة مذمومه يڠ لاهير درڤد غرور دسبوت دالم بوكو؟', options:['2','3','4','5'], correct:2, answerText:'4' },
+  { id:'q4', stem:'حديث اناني دروايتكن اوليه...', options:['الطبراني','بخاري، احمد، ترمذي','ابو داود سهاج','مسلم سهاج'], correct:1, answerText:'بخاري، احمد، ترمذي' },
+  { id:'q5', stem:'براڤ كاتيݢوري رياء يڠ دسبوت دالم بوكو؟', options:['3','4','5','6'], correct:2, answerText:'5' },
+  { id:'q6', stem:'داليل تكبور ترداڤت دالم سورة...', options:['النحل اية 23','الحديد اية 14','ال عمران اية 104','النساء اية 23'], correct:0, answerText:'النحل اية 23' }
+]},
+{ id:'s2', type:'betulSalah', badgeNum:2, title:'بتول اتاو ساله', questions:[
+  { id:'q1', stem:'غرور اداله ڤوڠكل كڤد صفة٢ مذمومه يڠ لاءين.', correct:'betul', answerText:'بتول' },
+  { id:'q2', stem:'عجب برماقصود ملاكوكن عبادة اونتوق دليهت اورڠ.', correct:'salah', answerText:'ساله — ايت اداله مقصود رياء، بوكن عجب.' },
+  { id:'q3', stem:'حديث اناني منچريتاكن تنتڠ ممبچينتاءي سودارا سڤرتي ممبچينتاءي ديري سنديري.', correct:'betul', answerText:'بتول' },
+  { id:'q4', stem:'تكبور برماقصود رنده ديري دان منريما كبنرن.', correct:'salah', answerText:'ساله — تكبور برماقصود ممبسركن ديري دان منولق كبنرن.' },
+  { id:'q5', stem:'رياء ممڤوڽاءي لبيه درڤد 1 كاتيݢوري.', correct:'betul', answerText:'بتول — اد 5 كاتيݢوري.' }
+]},
+{ id:'s3', type:'seretLepas', badgeNum:3, title:'سرت دان لڤس', questions:[
+  { id:'q1', stemParts:['',' برماقصود ممنتيڠكن ديري سنديري سهاج.'], blanks:['اناني'], wordBank:['اناني','تواضع','صبر'], answerText:'اناني' },
+  { id:'q2', stemParts:['',' برماقصود بڠݢ دڠن كلبيهن ديري سنديري.'], blanks:['عجب'], wordBank:['عجب','رياء','غرور'], answerText:'عجب' },
+  { id:'q3', stemParts:['حديث اناني دروايتكن درڤد ',''], blanks:['انس بن مالك'], wordBank:['انس بن مالك','ابو هريرة','ابن عمر'], answerText:'انس بن مالك' },
+  { id:'q4', stemParts:['داليل رياء ترداڤت دالم سورة ',''], blanks:['الماعون'], wordBank:['الماعون','الكوثر','الفيل'], answerText:'الماعون' },
+  { id:'q5', stemParts:['تكبور برماقصود منولق ',' دان ممنداڠ رنده اورڠ لاءين.'], blanks:['كبنرن'], wordBank:['كبنرن','نصيحة','بنتوان'], answerText:'كبنرن' }
+]},
+{ id:'s4', type:'padankan', badgeNum:4, title:'ڤادنكن', questions:[
+  { id:'q1', pairs:[{left:'غرور',right:'الحديد 14'},{left:'عجب',right:'التوبة 25'},{left:'رياء',right:'الماعون 4-6'},{left:'تكبور',right:'النحل 23'}], answerText:'غرور-الحديد14، عجب-التوبة25، رياء-الماعون4-6، تكبور-النحل23' },
+  { id:'q2', pairs:[{left:'اناني',right:'ممنتيڠكن ديري سنديري'},{left:'عجب',right:'بڠݢ دڠن كلبيهن ديري'}], answerText:'اناني-ممنتيڠكن ديري، عجب-بڠݢ دڠن كلبيهن' },
+  { id:'q3', pairs:[{left:'رياء قد توبة',right:'رياء سلڤس برتوبة'},{left:'رياء دالم اوچاڤن',right:'برچاكڤ اونتوق دڤوجي'}], answerText:'رياء قد توبة-سلڤس برتوبة، رياء دالم اوچاڤن-برچاكڤ اونتوق دڤوجي' },
+  { id:'q4', pairs:[{left:'بخاري، احمد، ترمذي',right:'ڤرياوي حديث اناني'},{left:'انس بن مالك',right:'ڤرياوي حديث اناني (صحابة)'}], answerText:'بخاري/احمد/ترمذي-ڤرياوي، انس بن مالك-صحابة' },
+  { id:'q5', pairs:[{left:'زره بيجي سواي سومبوڠ',right:'تيدق ماسوق شرݢ'},{left:'تكبور',right:'ممبسركن ديري'}], answerText:'زره بيجي سواي سومبوڠ-تيدق ماسوق شرݢ، تكبور-ممبسركن ديري' },
+  { id:'q6', pairs:[{left:'غرور',right:'ڤوڠكل صفة مذمومه'},{left:'اناني، عجب، رياء، تكبور',right:'چابڠ درڤد غرور'}], answerText:'غرور-ڤوڠكل، ٤ صفة لاءين-چابڠ' }
+]},
+{ id:'s5', type:'susunUrutan', badgeNum:5, title:'سوسون مڠيكوت اوروتن', questions:[
+  { id:'q1', stem:'سوسون مڠيكوت اورتن يڠ دبنتڠكن دالم بوكو تيك:', order:['غرور','اناني','عجب','رياء','تكبور'], answerText:'غرور → اناني → عجب → رياء → تكبور' },
+  { id:'q2', stem:'سوسون 5 كاتيݢوري رياء مڠيكوت اورتن دالم بوكو:', order:['رياء قد توبة','رياء قد فعاءين','رياء دالم اوچاڤن','رياء قد قربوتن','رياء كران راماي ڤڠيكوت'], answerText:'قد توبة → قد فعاءين → دالم اوچاڤن → قد قربوتن → كران راماي ڤڠيكوت' },
+  { id:'q3', stem:'سوسون ڤروسيس سسأورڠ ترجروموس ك غرور:', order:['ترڤداي دڠن كسنڠن دنيا','لوڤ اخيرت','برتروسن دالم دوسا'], answerText:'ترڤداي → لوڤ اخيرت → برتروسن دالم دوسا' },
+  { id:'q4', stem:'سوسون مڠيكوت اورتن حديث اناني:', order:['تيدق برايمان سسأورڠ','سهيڠݢ ممبچينتاءي سودارا','سڤرتي ممبچينتاءي ديري سنديري'], answerText:'تيدق برايمان → سهيڠݢ ممبچينتاءي سودارا → سڤرتي ديري سنديري' },
+  { id:'q5', stem:'سوسون اكيبت تكبور:', order:['ممبسركن ديري','منولق كبنرن','ديابايكن اوليه الله'], answerText:'ممبسركن ديري → منولق كبنرن → ديابايكن اوليه الله' }
+]},
+{ id:'s6', type:'kenalPasti', badgeNum:6, title:'كنل ڤستي', questions:[
+  { id:'q1', stem:'كنل ڤستي: يڠ مانكه چونتوه رياء دالم اوچاڤن؟', options:['برچاكڤ اونتوق دڤوجي','ممبري صدقة سچارا سنيڤ٢','برداندان اونتوق دليهت','منجادي إمام اونتوق دكنل'], correct:0, answerText:'برچاكڤ اونتوق دڤوجي' },
+  { id:'q2', stem:'كنل ڤستي: يڠ مانكه بوكن صفة يڠ لاهير درڤد غرور؟', options:['اناني','تواضع','عجب','تكبور'], correct:1, answerText:'تواضع — ايت صفة محموده، بوكن مذمومه' },
+  { id:'q3', stem:'كنل ڤستي: سيڤاكه ڤراوي حديث اناني درڤد كالڠن صحابة؟', options:['ابو هريرة','انس بن مالك','ابن عباس','عمر الخطاب'], correct:1, answerText:'انس بن مالك' },
+  { id:'q4', stem:'كنل ڤستي: يڠ مانكه چونتوه عجب؟', options:['بڠݢ دڠن كجاياءن ديري سنديري تنڤا مڠيڠت الله','ممبنتو اورڠ لاءين','مڠاكوءي كسالهن','برشكور اتس نعمة'], correct:0, answerText:'بڠݢ دڠن كجاياءن ديري تنڤا مڠيڠت الله' },
+  { id:'q5', stem:'كنل ڤستي: يڠ مانكه چونتوه تكبور؟', options:['منريما نصيحة','منولق كبنرن كران راس ديري لبيه بايك','مماءفكن كسالهن اورڠ','مرنده ديري'], correct:1, answerText:'منولق كبنرن كران راس ديري لبيه بايك' },
+  { id:'q6', stem:'كنل ڤستي: يڠ مانكه چونتوه رياء قد قربوتن؟', options:['ممبچ القرآن دڠن سواء مردو اونتوق دڤوجي جماعة','برصدقة دڠن ديام٢','بعبادة سنديرين دالم بيليق','برذكر دالم هاتي'], correct:0, answerText:'ممبچ القرآن دڠن سواء مردو اونتوق دڤوجي جماعة' }
+]},
+{ id:'s7', type:'kesanSebab', badgeNum:7, title:'كسن دان سبب', questions:[
+  { id:'q1', stem:'زك سنتياس برفيكير دي ممڤوڽاءي باڽق ماس لاݢي اونتوق برتوبة كلق، لالو اي تروس لك مڠجر كمواهن دان ملوڤاكن صلاة برولن٢ بولن لامڽ:', effectOptions:['زك ترجروموس ك غرور','زك منمبهكن كتقواءن'], reasonOptions:['غرور برماقصود ترڤداي دڠن اڤ يڠ دهاصرتكن سهيڠݢ لوڤ اخيرت','منمبه كتقواءن تيدق برايتن دڠن سيكڤ سبݬيني'], correctEffect:0, correctReason:0, answerText:'كسن: ترجروموس ك غرور / سبب: ترڤداي دڠن دنيا سهيڠݢ لوڤ اخيرت' },
+  { id:'q2', stem:'والاوڤون ادق٢ڽ كلاڤرن مننتي مكانن تڠهاري، زول تروس مڠهابيسكن سموا جواده كݢمرنڽ تنڤا بركوڠسي سديكيت ڤون:', effectOptions:['زول برسيكڤ اناني','زول برسيكڤ تواضع'], reasonOptions:['اناني برماقصود ممنتيڠكن ديري سنديري تنڤا مڠأمبيل كيرا اورڠ لاءين','تواضع برماقصود سباليقڽ'], correctEffect:0, correctReason:0, answerText:'كسن: برسيكڤ اناني / سبب: ممنتيڠكن ديري سنديري تنڤا مڠأمبيل كيرا اورڠ لاءين' },
+  { id:'q3', stem:'أيمن هاڽ برسوڠݢوه٢ ممباچ القرآن دڠن سواء مردو اڤابيلا اد اورڠ لالو دهادڤن بيليقڽ؛ سباءيق سهاج برسنديرين، اي تروس برهنتي ممباچ:', effectOptions:['أيمن ترجباق ك دالم رياء','أيمن ممڤرأوليهي ڤهالا ڤنوه'], reasonOptions:['رياء اداله بعبادة اونتوق دليهت اورڠ','رياء تيادا كسن كأتس ڤهالا'], correctEffect:0, correctReason:0, answerText:'كسن: ترجباق ك دالم رياء / سبب: بعبادة اونتوق دليهت اورڠ' },
+  { id:'q4', stem:'اڤابيلا ݢوروڽ منݢور كسيلاڤن دالم كرجا رومهڽ، دانيش ملنتيڠ دان بركات ݢوروڽ تيدق لايق منݬورڽ كران اي سنتياس منداڤت مركه ترتيڠݢي:', effectOptions:['دانيش ترماسوق تكبور','دانيش ترماسوق تواضع'], reasonOptions:['تكبور برماقصود ممبسركن ديري دان منولق كبنرن','تواضع برماقصود سباليقڽ'], correctEffect:0, correctReason:0, answerText:'كسن: ترماسوق تكبور / سبب: ممبسركن ديري دان منولق كبنرن' },
+  { id:'q5', stem:'سلڤس ممنڠي ڤرتنديڠن ڤيداتو ڤرينڬكت سكوله، إيمان برأولڠ كالي ممبريتاهو سموا اورڠ تنتڠ كهيبتنڽ سنديري تنڤا سكالي ڤون مڽبوت كشكورن كڤد الله:', effectOptions:['إيمان ترماسوق عجب','إيمان ترماسوق صبر'], reasonOptions:['عجب برماقصود بڠݢ دڠن كلبيهن ديري سنديري','صبر تيادا كأيتن'], correctEffect:0, correctReason:0, answerText:'كسن: ترماسوق عجب / سبب: بڠݢ دڠن كلبيهن ديري سنديري' }
+]},
+{ id:'s8', type:'klasifikasi', badgeNum:8, title:'كلاسيفيكاسي', questions:[
+  { id:'q1', binNames:['غرور','اناني','عجب','رياء','تكبور'],
+    items:[{label:'ترڤداي دڠن دنيا',bin:'غرور'},{label:'ممنتيڠكن ديري سنديري',bin:'اناني'},{label:'بڠݢ دڠن كلبيهن ديري',bin:'عجب'},{label:'بعبادة اونتوق دليهت',bin:'رياء'},{label:'ممبسركن ديري',bin:'تكبور'}],
+    answerText:'مسينڠ٢ سسواي دڠن تعريف ماسيڠ٢ صفة' },
+  { id:'q2', binNames:['صفة مذمومه','صفة محموده'],
+    items:[{label:'غرور',bin:'صفة مذمومه'},{label:'تواضع',bin:'صفة محموده'},{label:'تكبور',bin:'صفة مذمومه'},{label:'صبر',bin:'صفة محموده'}],
+    answerText:'غرور+تكبور→مذمومه؛ تواضع+صبر→محموده' },
+  { id:'q3', binNames:['رياء قد توبة','رياء دالم اوچاڤن','رياء كران ڤڠيكوت'],
+    items:[{label:'ملاكوكن كباءيقن سلڤس برتوبة اونتوق دڤوجي',bin:'رياء قد توبة'},{label:'برچاكڤ اونتوق دڤوجي',bin:'رياء دالم اوچاڤن'},{label:'رياء كران راماي ڤڠيكوت',bin:'رياء كران ڤڠيكوت'}],
+    answerText:'مسينڠ٢ سسواي كاتيݢوري ماسيڠ٢' },
+  { id:'q4', binNames:['برداليل النحل 23','برداليل الحديد 14'],
+    items:[{label:'تكبور',bin:'برداليل النحل 23'},{label:'غرور',bin:'برداليل الحديد 14'}],
+    answerText:'تكبور→النحل23؛ غرور→الحديد14' },
+  { id:'q5', binNames:['حديث برسومبر جلس دالم بوكو','حديث تيدق برسومبر دالم بوكو'],
+    items:[{label:'حديث اناني (بخاري/احمد/ترمذي)',bin:'حديث برسومبر جلس دالم بوكو'},{label:'حديث تكبور (زره بيجي سواي)',bin:'حديث تيدق برسومبر دالم بوكو'}],
+    answerText:'حديث اناني-برسومبر جلس؛ حديث تكبور-تيدق دچتق سومبرڽ دالم بوكو' },
+  { id:'q6', binNames:['بولهدجومڤاءي دالم اية الحديد 14','بولهدجومڤاءي دالم اية الماعون'],
+    items:[{label:'ترڤداي دڠن انݢن٢',bin:'بولهدجومڤاءي دالم اية الحديد 14'},{label:'صلاة دڠن لالاي',bin:'بولهدجومڤاءي دالم اية الماعون'}],
+    answerText:'ترڤداي دڠن انݢن٢→الحديد14؛ صلاة لالاي→الماعون' }
+]},
+{ id:'s9', type:'situasi', badgeNum:9, title:'سيتواسي', questions:[
+  { id:'q1', stem:'اليف مندابت مركه چميرلڠ دالم ڤڤريقساءن دان مولاي مماندڠ رنده رقن٢ يڠ ݢاݢل. اڤاكه صفة اين؟',
+    options:['تواضع','عجب دان تكبور','صبر','بلس كاسيهن'], correct:1, answerText:'عجب دان تكبور — بڠݢ دڠن كلبيهن سرتا ممنداڠ رنده اورڠ لاءين.' },
+  { id:'q2', stem:'دانيال برصدقة سچارا تربوك دان ممستيكن سموا اورڠ ملياتڽ اݢر دڤوجي درمواتي. اڤاكه صفة اين؟',
+    options:['رياء','إخلاص','تواضع','صبر'], correct:0, answerText:'رياء — ملاكوكن كباءيقن اونتوق دليهت/دڤوجي اورڠ.' },
+  { id:'q3', stem:'حكيم حاڽ ممنتيڠكن كڤرلوانڽ سنديري والاوڤون كلوارݢاڽ ممرلوكن بنتوان. اڤاكه صفة اين؟',
+    options:['اناني','كاسيه ساياڠ','مجاهدة','عزة'], correct:0, answerText:'اناني — ممنتيڠكن ديري سنديري سهاج.' },
+  { id:'q4', stem:'رقن سكلاس عمر ممبريكن نصيحة، تتاڤي عمر منولقڽ دان براس ديريڽ لبيه ڤنداي. اڤاكه صفة اين؟',
+    options:['تواضع','تكبور','بركأول','برديكاري'], correct:1, answerText:'تكبور — منولق كبنرن/نصيحة كران راس ديري لبيه باءيق.' },
+  { id:'q5', stem:'سلمى ترلالو يقين اكن دافت مركه چميرلڠ سهيڠݢ تيدق برأولڠكاجي لاڠسوڠ. اڤاكه اين منچرمينكن؟',
+    options:['غرور','صبر','حكمة','مجاهدة'], correct:0, answerText:'غرور — ترڤداي دڠن انݢن٢ سهيڠݢ لالاي درڤد اوسها سبنر.' },
+  { id:'q6', stem:'فرحان مڠاكوءي كسالهنڽ دان برترامكاسيه اتس نصيحة رقنڽ. اڤاكه اين برلاوانن دڠن صفة اڤ؟',
+    options:['تكبور','صبر','عزة','حكمة'], correct:0, answerText:'برلاوانن دڠن تكبور — كران اي منريما، بوكن منولق، كبنرن.' }
+]},
+{ id:'s10', type:'kesanSalah', badgeNum:10, title:'كسن ساله', questions:[
+  { id:'q1', sentenceWords:['غرور','برماقصود','رنده','ديري','ترهادڤ','الله'], wrongIndex:2, correctReplacement:1,
+    replacementOptions:['بسر','ترڤداي دڠن','تقوا'], answerText:'غرور برماقصود ترڤداي دڠن دنيا (بوكن "رنده ديري").' },
+  { id:'q2', sentenceWords:['حديث','اناني','دروايتكن','اوليه','الطبراني'], wrongIndex:4, correctReplacement:1,
+    replacementOptions:['ابو داود','بخاري، احمد، ترمذي','النسائي'], answerText:'حديث اناني دروايتكن اوليه بخاري، احمد، ترمذي (بوكن "الطبراني").' },
+  { id:'q3', sentenceWords:['رياء','ممڤوڽاءي','2','كاتيݢوري'], wrongIndex:2, correctReplacement:2,
+    replacementOptions:['3','5','7'], answerText:'رياء ممڤوڽاءي 5 كاتيݢوري (بوكن "2").' },
+  { id:'q4', sentenceWords:['تكبور','برماقصود','منريما','كبنرن'], wrongIndex:2, correctReplacement:0,
+    replacementOptions:['منولق','مڠأمبيل','مڠاجق'], answerText:'تكبور برماقصود منولق كبنرن (بوكن "منريما").' },
+  { id:'q5', sentenceWords:['داليل','غرور','ترداڤت','دالم','سورة','الماعون'], wrongIndex:5, correctReplacement:1,
+    replacementOptions:['التوبة','الحديد','النحل'], answerText:'داليل غرور ترداڤت دالم سورة الحديد (بوكن "الماعون").' }
+]}
+]};
+
+</script>
+<script>
+const QUIZ_F5 = { id:'f5', sections:[
+{ id:'s1', type:'objektif', badgeNum:1, title:'اوبجيكتيف', questions:[
+  { id:'q1', stem:'اڤاكه مقصود محرم؟', options:['اورڠ يڠ حرام دكهويني بواة سلاما٢ڽ','اورڠ يڠ دبنركن دكهويني','اورڠ توا كيت سهاج','جيران يڠ راڤت'], correct:0, answerText:'اورڠ يڠ حرام دكهويني بواة سلاما٢ڽ' },
+  { id:'q2', stem:'دالم سورة اڤاكه اية 23 يڠ منجادي داليل محرم؟', options:['النحل','الأحزاب','النساء','البقرة'], correct:2, answerText:'النساء' },
+  { id:'q3', stem:'براڤ سبب محرم يڠ اوتام؟', options:['2','3','4','5'], correct:1, answerText:'3' },
+  { id:'q4', stem:'ايبو مرتوا ترماسوق محرم كران سبب...', options:['نسب','ڤركهوينن','ڤڽوسوان','ڤرسهابتن'], correct:1, answerText:'ڤركهوينن' }
+]},
+{ id:'s2', type:'betulSalah', badgeNum:2, title:'بتول اتاو ساله', questions:[
+  { id:'q1', stem:'محرم دبنركن دكهويني بواة سماس ترتنتو سهاج.', correct:'salah', answerText:'ساله — محرم حرام دكهويني بواة سلاما٢ڽ.' },
+  { id:'q2', stem:'انق تيري ترماسوق محرم كران سبب ڤركهوينن.', correct:'betul', answerText:'بتول' },
+  { id:'q3', stem:'ڤڽوسوان يڠ ممبواتكن محرم ايالة سبانياق 5 كالي كنياڠ.', correct:'betul', answerText:'بتول' }
+]},
+{ id:'s3', type:'seretLepas', badgeNum:3, title:'سرت دان لڤس', questions:[
+  { id:'q1', stemParts:['محرم كران ',' ترماسوق ايبو، انق، دان ادق-بردا.'], blanks:['نسب'], wordBank:['نسب','ڤركهوينن','ڤڽوسوان'], answerText:'نسب' },
+  { id:'q2', stemParts:['ڤڽوسوان ممبواتكن محرم جك منچاڤاي ',' كالي كنياڠ.'], blanks:['5'], wordBank:['5','3','7'], answerText:'5' },
+  { id:'q3', stemParts:['داليل محرم ترداڤت دالم سورة ',' اية 23.'], blanks:['النساء'], wordBank:['النساء','النحل','الأحزاب'], answerText:'النساء' }
+]},
+{ id:'s4', type:'padankan', badgeNum:4, title:'ڤادنكن', questions:[
+  { id:'q1', pairs:[{left:'ايبو',right:'نسب'},{left:'ايبو مرتوا',right:'ڤركهوينن'},{left:'ايبو سوسوان',right:'ڤڽوسوان'}], answerText:'ايبو-نسب، ايبو مرتوا-ڤركهوينن، ايبو سوسوان-ڤڽوسوان' },
+  { id:'q2', pairs:[{left:'انق ڤرمڤوان',right:'نسب'},{left:'انق تيري',right:'ڤركهوينن'}], answerText:'انق ڤرمڤوان-نسب، انق تيري-ڤركهوينن' },
+  { id:'q3', pairs:[{left:'مق سودارا',right:'نسب'},{left:'منانتو',right:'ڤركهوينن'}], answerText:'مق سودارا-نسب، منانتو-ڤركهوينن' },
+  { id:'q4', pairs:[{left:'سورة النساء',right:'داليل محرم'},{left:'5 كالي كنياڠ',right:'شرط ڤڽوسوان'}], answerText:'سورة النساء-داليل محرم، 5 كالي كنياڠ-شرط ڤڽوسوان' }
+]},
+{ id:'s5', type:'susunUrutan', badgeNum:5, title:'سوسون مڠيكوت اوروتن', questions:[
+  { id:'q1', stem:'سوسون مڠيكوت اورتن يڠ دبنتڠكن دالم بوكو تيك:', order:['نسب','ڤركهوينن','ڤڽوسوان'], answerText:'نسب → ڤركهوينن → ڤڽوسوان' },
+  { id:'q2', stem:'سوسون لڠكه ممبوقتيكن سسأورڠ محرم كران ڤڽوسوان:', order:['بايي منيوسو','چاڤاي 5 كالي كنياڠ','دالم تمڤوه 2 تاهون','ترتوبوهڽ حبوڠن محرم'], answerText:'بايي منيوسو → چاڤاي 5 كالي كنياڠ → دالم تمڤوه 2 تاهون → ترتوبوهڽ حبوڠن محرم' },
+  { id:'q3', stem:'سوسون مڠيكوت راڤتن هوبوڠن نسب (ڤالڠ راڤت دهولو):', order:['ايبو','مق سودارا','انق سودارا ڤرمڤوان'], answerText:'ايبو → مق سودارا → انق سودارا ڤرمڤوان' }
+]},
+{ id:'s6', type:'kenalPasti', badgeNum:6, title:'كنل ڤستي', questions:[
+  { id:'q1', stem:'كنل ڤستي: يڠ مانكه بوكن محرم؟', options:['ادق ڤرمڤوان','سيڤو (ايڤر دواي)','مق سودارا','چوچو ڤرمڤوان'], correct:1, answerText:'سيڤو (ايڤر دواي) — بوكن محرم' },
+  { id:'q2', stem:'كنل ڤستي: يڠ مانكه محرم كران ڤركهوينن؟', options:['انق ڤرمڤوان','منانتو','ادق-بردا','مق سودارا'], correct:1, answerText:'منانتو' },
+  { id:'q3', stem:'كنل ڤستي: يڠ مانكه محرم كران نسب؟', options:['ايبو مرتوا','چوچو ڤرمڤوان','ايبو تيري','منانتو'], correct:1, answerText:'چوچو ڤرمڤوان' },
+  { id:'q4', stem:'كنل ڤستي: سيڤاكه يڠ منجادي محرم هاسيل درڤد ڤڽوسوان؟', options:['ابڠ ايڤر','سودارا سوسوان','سيڤو','رقن نياݢ'], correct:1, answerText:'سودارا سوسوان' }
+]},
+{ id:'s7', type:'kesanSebab', badgeNum:7, title:'كسن دان سبب', questions:[
+  { id:'q1', stem:'ڤوان امينة منيوسوكن انق سودارڽ سباڽق 7 كالي سڤنجڠ تمڤوه بايي ايت برعمور 8 بولن:', effectOptions:['انق ايت منجادي محرم كڤد ڤوان امينة','تيادا هوبوڠن محرم تربنتوق'], reasonOptions:['شرط 5 كالي كنياڠ دالم تمڤوه 2 تاهون تله دڤنوهي','ڤڽوسوان ايت تيدق منچوكوڤي شرط'], correctEffect:0, correctReason:0, answerText:'كسن: منجادي محرم / سبب: شرط 5 كالي كنياڠ دالم 2 تاهون دڤنوهي' },
+  { id:'q2', stem:'سسأورڠ لالاكي مڠهويني بكس ايستري باڤڽ:', effectOptions:['دبنركن دالم إسلام','حرام سلاما٢ڽ'], reasonOptions:['ايستري باڤ ترماسوق محرم ڤركهوينن كڤد انق','تيادا كأيتن دڠن حكوم محرم'], correctEffect:1, correctReason:0, answerText:'كسن: حرام سلاما٢ڽ / سبب: ايستري باڤ ترماسوق محرم ڤركهوينن كڤد انق' },
+  { id:'q3', stem:'انق ڤرمڤوان تيدق ڤرلو ممكاي توتوڤ عورة ڤنوه دهادڤن باڤ كنداوڠڽ:', effectOptions:['بتول','ساله'], reasonOptions:['باڤ كنداوڠ ترماسوق محرم نسب','باڤ كنداوڠ بوكن محرم'], correctEffect:0, correctReason:0, answerText:'كسن: بتول / سبب: باڤ كنداوڠ ترماسوق محرم نسب' }
+]},
+{ id:'s8', type:'klasifikasi', badgeNum:8, title:'كلاسيفيكاسي', questions:[
+  { id:'q1', binNames:['نسب','ڤركهوينن','ڤڽوسوان'],
+    items:[{label:'ادق ڤرمڤوان',bin:'نسب'},{label:'ايبو مرتوا',bin:'ڤركهوينن'},{label:'ايبو سوسوان',bin:'ڤڽوسوان'},{label:'مق سودارا',bin:'نسب'}],
+    answerText:'ادق ڤرمڤوان+مق سودارا→نسب؛ ايبو مرتوا→ڤركهوينن؛ ايبو سوسوان→ڤڽوسوان' },
+  { id:'q2', binNames:['نسب','ڤركهوينن','ڤڽوسوان'],
+    items:[{label:'انق تيري',bin:'ڤركهوينن'},{label:'چوچو ڤرمڤوان',bin:'نسب'},{label:'سودارا سوسوان',bin:'ڤڽوسوان'}],
+    answerText:'انق تيري→ڤركهوينن؛ چوچو ڤرمڤوان→نسب؛ سودارا سوسوان→ڤڽوسوان' },
+  { id:'q3', binNames:['محرم','بوكن محرم'],
+    items:[{label:'ايبو',bin:'محرم'},{label:'سيڤو',bin:'بوكن محرم'},{label:'منانتو',bin:'محرم'},{label:'ابڠ ايڤر',bin:'بوكن محرم'}],
+    answerText:'ايبو+منانتو→محرم؛ سيڤو+ابڠ ايڤر→بوكن محرم' },
+  { id:'q4', binNames:['محرم','بوكن محرم'],
+    items:[{label:'مق سودارا',bin:'محرم'},{label:'سڤوڤو',bin:'بوكن محرم'},{label:'ايبو سوسوان',bin:'محرم'}],
+    answerText:'مق سودارا+ايبو سوسوان→محرم؛ سڤوڤو→بوكن محرم' }
+]},
+{ id:'s9', type:'situasi', badgeNum:9, title:'سيتواسي', questions:[
+  { id:'q1', stem:'عائشة برتموءن دڠن سوامي كڤد كاكقڽ (ابڠ ايڤر) تنڤا توتوڤ عورة سڤنوهڽ. اڤاكه ايت دبنركن؟',
+    options:['تيدق، سوامي كاكق بوكن محرم','يا، كران سوامي كاكق اداله محرم كران ڤركهوينن','يا، سلاݢي دالم رومه سنديري','تيدق ڤستي'],
+    correct:0, answerText:'تيدق — سوامي كاكق (ابڠ ايڤر) بوكن محرم كڤد عائشة.' },
+  { id:'q2', stem:'حليمة منيوسوكن بايي جيرانڽ سبانياق 6 كالي كنياڠ سماس بايي ايت برعمور 1 تاهون. اڤاكه كسنڽ؟',
+    options:['تيادا كسن، ڤرلو 10 كالي','بايي ايت منجادي محرم كڤد حليمة و ككلوارݢاڽ','هاڽ محرم كڤد حليمة سهاج، بوكن ككلوارݢا','تيدق صح كران بايي تيدق تاهو'],
+    correct:1, answerText:'بايي ايت منجادي محرم (شرط 5 كالي كنياڠ دالم 2 تاهون تيله تر ڤنوهي).' },
+  { id:'q3', stem:'زهرة اكن برنكاه دڠن سيڤو (سواميڽ كاكق)ڽ ستله كاكقڽ منيڠݢل دنيا. اڤاكه هوكومڽ؟',
+    options:['حرام، كران سيڤو اداله محرم','هاروس، كران سيڤو بوكن محرم','واجب دلاكوكن','حرام سلاما٢ڽ تنڤا شرط'],
+    correct:1, answerText:'هاروس — سيڤو بوكن محرم، ڤرنكاهن دبنركن سلڤس تمڤوه عدة.' },
+  { id:'q4', stem:'اورڠ توا فرحان ممبنركنڽ برسنديرين دڠن سڤوڤوڽ يڠ سباي دالم سبواه بيليق. اڤاكه اين سسواي دڠن كونسيڤ محرم؟',
+    options:['يا، كران سڤوڤو اداله محرم','تيدق سسواي، كران سڤوڤو بوكن محرم','يا، سلاݢي اد ڤينتو تربوك','تيدق برماس أله لاڠسوڠ'],
+    correct:1, answerText:'تيدق سسواي — سڤوڤو بوكن محرم، ڤرلو منجاڬ ادب برسنديرين.' }
+]},
+{ id:'s10', type:'kesanSalah', badgeNum:10, title:'كسن ساله', questions:[
+  { id:'q1', sentenceWords:['محرم','بوليه','دكهويني','بواة','سلاما٢ڽ'], wrongIndex:1, correctReplacement:1,
+    replacementOptions:['واجب','حرام','هاروس'], answerText:'محرم حرام دكهويني بواة سلاما٢ڽ (بوكن "بوليه").' },
+  { id:'q2', sentenceWords:['سيڤو','اداله','محرم','كڤد','منانتوڽ'], wrongIndex:2, correctReplacement:0,
+    replacementOptions:['بوكن محرم','ساودارا','قرابة راڤت'], answerText:'سيڤو بوكن محرم كڤد منانتوڽ (بوكن "اداله محرم").' },
+  { id:'q3', sentenceWords:['ڤڽوسوان','ممبواتكن','محرم','جك','2','كالي','كنياڠ'], wrongIndex:4, correctReplacement:2,
+    replacementOptions:['1','3','5'], answerText:'ڤڽوسوان ممبواتكن محرم جك 5 كالي كنياڠ (بوكن "2").' }
+]}
+]};
+
+</script>
+<script>
+const QUIZ_F6 = { id:'f6', sections:[
+{ id:'s1', type:'objektif', badgeNum:1, title:'اوبجيكتيف', questions:[
+  { id:'q1', stem:'اڤاكه عورة للاكي؟', options:['انتارا ڤوسة دان لوتوت','سلوروه بادن','موك سهاج','دادا سهاج'], correct:0, answerText:'انتارا ڤوسة دان لوتوت' },
+  { id:'q2', stem:'اڤاكه عورة ڤرمڤوان؟', options:['موك سهاج','سلوروه بادن كچوالي موك دان تاڤق تاڠن','انتارا ڤوسة-لوتوت','تاڠن سهاج'], correct:1, answerText:'سلوروه بادن كچوالي موك دان تاڤق تاڠن' },
+  { id:'q3', stem:'اڤاكه هوكوم منجاڬ عورة؟', options:['سنة','واجب','هاروس','مكروه'], correct:1, answerText:'واجب' },
+  { id:'q4', stem:'داليل حكوم منجاڬ عورة ترداڤت دالم سورة...', options:['الأحزاب اية 59','النور اية 30','النساء اية 23','البقرة اية 255'], correct:0, answerText:'الأحزاب اية 59' },
+  { id:'q5', stem:'امرد ايالة...', options:['ڤمودا يڠ بلوم تومبوه جاڠݢوت','كانق٢ باروه لاهير','ڤرمڤوان موده','اورڠ توا'], correct:0, answerText:'ڤمودا يڠ بلوم تومبوه جاڠݢوت' },
+  { id:'q6', stem:'بياساڽ برعمور براڤاكه سسأورڠ دݢلر امرد؟', options:['1-5 تاهون','5-10 تاهون','10-15 تاهون','20-25 تاهون'], correct:2, answerText:'10-15 تاهون' },
+  { id:'q7', stem:'كانق برعمور 0-4 تاهون دكيرا...', options:['بلوم عورة','عورة سڤنوهڽ','عورة سڤرتي ديواس','حرام دليهت'], correct:0, answerText:'بلوم دكيرا عورة' }
+]},
+{ id:'s2', type:'betulSalah', badgeNum:2, title:'بتول اتاو ساله', questions:[
+  { id:'q1', stem:'حكوم منجاڬ عورة اداله سنة موءكد.', correct:'salah', answerText:'ساله — حكومڽ واجب.' },
+  { id:'q2', stem:'عورة ڤرمڤوان ترماسوق موك دان تاڤق تاڠن.', correct:'salah', answerText:'ساله — موك دان تاڤق تاڠن دكچوالكن درڤد عورة.' },
+  { id:'q3', stem:'دوكتور دبنركن مليهت عورة ڤسين ستاكت ڤرلو سهاج كتيك ڤرابتن.', correct:'betul', answerText:'بتول' },
+  { id:'q4', stem:'كانق برعمور 5-10 تاهون عورتڽ سام سڤرتي ديواس.', correct:'salah', answerText:'ساله — عورتڽ تربتس ڤد كماءلوان سهاج.' },
+  { id:'q5', stem:'امرد ممرلوكن ادب مليهت يڠ خاص كران بوليه ممباوا فتنة.', correct:'betul', answerText:'بتول' },
+  { id:'q6', stem:'سلڤس باليغ، عورة كانق سام سڤرتي عورة اورڠ ديواس.', correct:'betul', answerText:'بتول' },
+  { id:'q7', stem:'دوكتور سجنس تيدق دأوتاماكن دالم ڤرابتن ڤرودتن.', correct:'salah', answerText:'ساله — دوكتور سجنس دأوتاماكن جك ممونڬكين.' }
+]},
+{ id:'s3', type:'seretLepas', badgeNum:3, title:'سرت دان لڤس', questions:[
+  { id:'q1', stemParts:['عورة للاكي ايالة انتارا ڤوسة دان ',''], blanks:['لوتوت'], wordBank:['لوتوت','باهو','دادا'], answerText:'لوتوت' },
+  { id:'q2', stemParts:['داليل حكوم منجاڬ عورة ترداڤت دالم سورة ',''], blanks:['الأحزاب'], wordBank:['الأحزاب','النور','يس'], answerText:'الأحزاب' },
+  { id:'q3', stemParts:['',' ايالة ڤمودا يڠ بلوم تومبوه جاڠݢوت.'], blanks:['امرد'], wordBank:['امرد','اجنبي','محرم'], answerText:'امرد' },
+  { id:'q4', stemParts:['حكوم منجاڬ عورة اداله ',''], blanks:['واجب'], wordBank:['واجب','سنة','هاروس'], answerText:'واجب' },
+  { id:'q5', stemParts:['كانق برعمور 0-4 تاهون بلوم دكيرا ',''], blanks:['عورة'], wordBank:['عورة','باليغ','امرد'], answerText:'عورة' },
+  { id:'q6', stemParts:['كتيك ڤرابتن، دوكتور ',' دأوتاماكن.'], blanks:['سجنس'], wordBank:['سجنس','مودا','برڤڠالمن'], answerText:'سجنس' },
+  { id:'q7', stemParts:['عورة ڤرمڤوان ايالة سلوروه بادن كچوالي موك دان ',''], blanks:['تاڤق تاڠن'], wordBank:['تاڤق تاڠن','كاكي','رمبوت'], answerText:'تاڤق تاڠن' }
+]},
+{ id:'s4', type:'padankan', badgeNum:4, title:'ڤادنكن', questions:[
+  { id:'q1', pairs:[{left:'عورة للاكي',right:'ڤوسة-لوتوت'},{left:'عورة ڤرمڤوان',right:'سلوروه كچوالي موك+تاڤق تاڠن'}], answerText:'للاكي-ڤوسة/لوتوت، ڤرمڤوان-سلوروه كچوالي موك/تاڤق تاڠن' },
+  { id:'q2', pairs:[{left:'0-4 تاهون',right:'بلوم عورة'},{left:'5-10 تاهون',right:'عورة تربتس'},{left:'سلڤس باليغ',right:'سام ديواس'}], answerText:'0-4-بلوم عورة، 5-10-تربتس، سلڤس باليغ-سام ديواس' },
+  { id:'q3', pairs:[{left:'الأحزاب 59',right:'داليل منجاڬ عورة'},{left:'امرد',right:'10-15 تاهون'}], answerText:'الأحزاب59-داليل منجاڬ عورة، امرد-10-15تاهون' },
+  { id:'q4', pairs:[{left:'ضرورة',right:'كأداءن مندسق'},{left:'اجنبي',right:'بوكن محرم'}], answerText:'ضرورة-كأداءن مندسق، اجنبي-بوكن محرم' },
+  { id:'q5', pairs:[{left:'دوكتور سجنس',right:'دأوتاماكن'},{left:'محرم/سيكسين',right:'دسرتاكن جك ممونڬكين'}], answerText:'دوكتور سجنس-دأوتاماكن، محرم/سيكسين-دسرتاكن' },
+  { id:'q6', pairs:[{left:'ظاهير',right:'بهاڬين بادن محرم يڠ بوليه دليهت'},{left:'عورة',right:'بهاڬين بادن يڠ واجب دتوتوڤ'}], answerText:'ظاهير-بوليه دليهت، عورة-واجب دتوتوڤ' },
+  { id:'q7', pairs:[{left:'موك+تاڤق تاڠن',right:'دكچوالكن درڤد عورة ڤرمڤوان'},{left:'ڤوسة-لوتوت',right:'عورة للاكي'}], answerText:'موك+تاڤق تاڠن-دكچوالكن، ڤوسة-لوتوت-عورة للاكي' }
+]},
+{ id:'s5', type:'susunUrutan', badgeNum:5, title:'سوسون مڠيكوت اوروتن', questions:[
+  { id:'q1', stem:'سوسون ڤرينڬكة عمور عورة كانق (موده ك توا):', order:['0-4 تاهون','5-10 تاهون','سلڤس باليغ'], answerText:'0-4 → 5-10 → سلڤس باليغ' },
+  { id:'q2', stem:'سوسون كأوتاماءن دوكتور اونتوق ڤسين ڤرمڤوان:', order:['دوكتور ڤرمڤوان','دوكتور للاكي دڠن سيكسين','دوكتور للاكي تنڤا سيكسين (كچوالي ضرورة)'], answerText:'دوكتور ڤرمڤوان → دوكتور للاكي+سيكسين → دوكتور للاكي تنڤا سيكسين' },
+  { id:'q3', stem:'سوسون لڠكه ادب مليهت كتيك ضرورة (ڤرابتن):', order:['ڤستيكن كأداءن مندسق','هاديركن سيكسين/محرم جك ممونڬكين','دوكتور مليهت ستاكت ڤرلو سهاج'], answerText:'ڤستيكن مندسق → هاديركن سيكسين → مليهت ستاكت ڤرلو' },
+  { id:'q4', stem:'سوسون بهاڬين عورة للاكي (دري اتس ك باوه):', order:['ڤوسة','ڤها','لوتوت'], answerText:'ڤوسة → ڤها → لوتوت' },
+  { id:'q5', stem:'سوسون كتيݢوري عورة (اومم ك خصوص):', order:['عورة اومم','عورة ترهادڤ محرم','عورة ترهادڤ اجنبي'], answerText:'عورة اومم → ترهادڤ محرم → ترهادڤ اجنبي' },
+  { id:'q6', stem:'سوسون ڤركمباڠن سسأورڠ كانق لالاكي:', order:['كانق٢','امرد','باليغ (ديواس)'], answerText:'كانق٢ → امرد → باليغ' },
+  { id:'q7', stem:'سوسون مڠيكوت اورتن حاصيل ڤمبلاجرن دالم بوكو تيك:', order:['ڤڠرتين دان بهاڬين عورة','حكوم منجاڬ عورة','ادب مليهت محرم دان اجنبي'], answerText:'ڤڠرتين/بهاڬين → حكوم → ادب مليهت' }
+]},
+{ id:'s6', type:'kenalPasti', badgeNum:6, title:'كنل ڤستي', questions:[
+  { id:'q1', stem:'كنل ڤستي: يڠ مانكه ترماسوق عورة للاكي؟', options:['ڤها','موك','تاڠن','كڤالا'], correct:0, answerText:'ڤها — ترلتق انتارا ڤوسة دان لوتوت' },
+  { id:'q2', stem:'كنل ڤستي: يڠ مانكه بوكن ترماسوق عورة ڤرمڤوان؟', options:['رمبوت','لڠن','تاڤق تاڠن','ليهر'], correct:2, answerText:'تاڤق تاڠن — دكچوالكن درڤد عورة' },
+  { id:'q3', stem:'كنل ڤستي: يڠ مانكه چونتوه كأداءن ضرورة؟', options:['ڤرابتن ڤرودتن','برجالن-جالن','مليهت TV','ماكن دلوار'], correct:0, answerText:'ڤرابتن ڤرودتن' },
+  { id:'q4', stem:'كنل ڤستي: سياڤاكه يڠ دݢلر اجنبي؟', options:['ايبو','اورڠ يڠ بوكن محرم','ادق-بردا','انق'], correct:1, answerText:'اورڠ يڠ بوكن محرم' },
+  { id:'q5', stem:'كنل ڤستي: يڠ مانكه چونتوه بهاڬين ظاهير محرم؟', options:['موك دان تاڠن','ڤها','دادا','ڤرت'], correct:0, answerText:'موك دان تاڠن' },
+  { id:'q6', stem:'كنل ڤستي: براڤ عمورڪه امرد بياساڽ برادا؟', options:['1-5 تاهون','5-10 تاهون','10-15 تاهون','16-20 تاهون'], correct:2, answerText:'10-15 تاهون' },
+  { id:'q7', stem:'كنل ڤستي: يڠ مانكه اداله حكوم منجاڬ عورة؟', options:['سنة','واجب','هاروس','مباح'], correct:1, answerText:'واجب' }
+]},
+{ id:'s7', type:'kesanSebab', badgeNum:7, title:'كسن دان سبب', questions:[
+  { id:'q1', stem:'سسأورڠ ڤرمڤوان منوتوڤ سلوروه بادنڽ كچوالي موك دان تاڤق تاڠن:', effectOptions:['اي منوناءيكن توتوتن عورة','اي ماسيه ملڠݬر حكوم عورة'], reasonOptions:['ايت اداله بهاڬين يڠ دكچوالكن درڤد عورة ڤرمڤوان','عورة ڤرمڤوان ترماسوق موك'], correctEffect:0, correctReason:0, answerText:'كسن: منوناءيكن توتوتن / سبب: موك+تاڤق تاڠن دكچوالكن درڤد عورة' },
+  { id:'q2', stem:'سسأورڠ دوكتور ڤرمڤوان مراوت ڤسين ڤرمڤوان يڠ ساكيت:', effectOptions:['ممنوهي كأوتاماءن دوكتور سجنس','ملڠݬر ادب ڤرابتن'], reasonOptions:['دوكتور سجنس دأوتاماكن كتيك ممونڬكين','دوكتور ڤرلو للاكي سنتياس'], correctEffect:0, correctReason:0, answerText:'كسن: ممنوهي كأوتاماءن دوكتور سجنس / سبب: دوكتور سجنس دأوتاماكن' },
+  { id:'q3', stem:'سسأورڠ امرد يڠ روڤاون دڤوجي كچانتيقنڽ سچارا تربوك دخالايق راماي:', effectOptions:['بوليه ممباوا فتنة، دلارڠ','دݢالقكن تنڤا شرط'], reasonOptions:['ممبريكن فتنة اداله انتارا سبب لارڠن مليهت امرد','ايت تيادا كأيتن دڠن حكوم امرد'], correctEffect:0, correctReason:0, answerText:'كسن: بوليه ممباوا فتنة، دلارڠ / سبب: فتنة اداله سبب لارڠن مليهت امرد' },
+  { id:'q4', stem:'كانق برعمور 3 تاهون برجالن تنڤا باجو دالم رومه:', effectOptions:['تيادا مسئله دري سودوت عورة','ملڠݬر حكوم عورة'], reasonOptions:['عمور 0-4 تاهون بلوم دكيرا عورة','سمو عمور واجب توتوڤ عورة سڤنوهڽ'], correctEffect:0, correctReason:0, answerText:'كسن: تيادا مسئله / سبب: عمور 0-4 تاهون بلوم دكيرا عورة' },
+  { id:'q5', stem:'سسأورڠ للاكي مليهت عورة للاكي لاءين تنڤا سبب يڠ صح:', effectOptions:['ملڠݬر ادب مليهت سسام للاكي','دبنركن سڤنوهڽ'], reasonOptions:['عورة للاكي (ڤوسة-لوتوت) واجب دجاڬ ولاوڤون سسام للاكي','تيادا حكوم بواة سسام للاكي'], correctEffect:0, correctReason:0, answerText:'كسن: ملڠݬر ادب مليهت / سبب: عورة للاكي واجب دجاڬ ولاوڤون سسام للاكي' },
+  { id:'q6', stem:'سسأورڠ كانق تله باليغ ڤد عمور 12 تاهون:', effectOptions:['عورتڽ منجادي سام سڤرتي ديواس','عورتڽ ماسيه سڤرتي كانق 5-10 تاهون'], reasonOptions:['حكوم عورة برأوبه سلڤس باليغ','عمور تيادا كسن كأتس حكوم عورة'], correctEffect:0, correctReason:0, answerText:'كسن: عورتڽ سام سڤرتي ديواس / سبب: حكوم عورة برأوبه سلڤس باليغ' },
+  { id:'q7', stem:'سسأورڠ ڤرمڤوان برسام ڤرمڤوان بوكن إسلام دالم كأداءن اورت:', effectOptions:['ادب عورة ڤرلو دأمبيل كيرا مڠيكوت ڤنداڤت الأحكام','تيادا حكوم لاڠسوڠ'], reasonOptions:['اد ڤرباهسن علماء تنتڠ عورة ترهادڤ ڤرمڤوان بوكن إسلام','بوكن إسلام تيادا حكوم عورة'], correctEffect:0, correctReason:0, answerText:'كسن: ادب عورة ڤرلو دأمبيل كيرا / سبب: اد ڤرباهسن علماء تنتڠ ايسو اين' }
+]},
+{ id:'s8', type:'klasifikasi', badgeNum:8, title:'كلاسيفيكاسي', questions:[
+  { id:'q1', binNames:['عورة للاكي','عورة ڤرمڤوان'],
+    items:[{label:'ڤوسة-لوتوت',bin:'عورة للاكي'},{label:'سلوروه كچوالي موك/تاڤق تاڠن',bin:'عورة ڤرمڤوان'}], answerText:'ڤوسة-لوتوت→للاكي؛ سلوروه كچوالي موك/تاڤق تاڠن→ڤرمڤوان' },
+  { id:'q2', binNames:['0-4 تاهون','5-10 تاهون','سلڤس باليغ'],
+    items:[{label:'بلوم دكيرا عورة',bin:'0-4 تاهون'},{label:'عورة تربتس',bin:'5-10 تاهون'},{label:'سام ديواس',bin:'سلڤس باليغ'}], answerText:'مسينڠ٢ سسواي ڤرينڬكة عمور' },
+  { id:'q3', binNames:['محرم','اجنبي'],
+    items:[{label:'ايبو',bin:'محرم'},{label:'سڤوڤو',bin:'اجنبي'},{label:'ادق-بردا',bin:'محرم'},{label:'رقن سكرجا',bin:'اجنبي'}], answerText:'ايبو+ادق-بردا→محرم؛ سڤوڤو+رقن سكرجا→اجنبي' },
+  { id:'q4', binNames:['دبنركن كتيك ضرورة','تيدق دبنركن'],
+    items:[{label:'دوكتور مليهت عورة اونتوق راوتن',bin:'دبنركن كتيك ضرورة'},{label:'مليهت عورة تنڤا سبب',bin:'تيدق دبنركن'}], answerText:'راوتن ضرورة→دبنركن؛ تنڤا سبب→تيدق دبنركن' },
+  { id:'q5', binNames:['ترماسوق ظاهير (بوليه دليهت محرم)','ترماسوق عورة (تيدق بوليه)'],
+    items:[{label:'موك',bin:'ترماسوق ظاهير (بوليه دليهت محرم)'},{label:'تاڠن',bin:'ترماسوق ظاهير (بوليه دليهت محرم)'},{label:'ڤها',bin:'ترماسوق عورة (تيدق بوليه)'}], answerText:'موك+تاڠن→ظاهير؛ ڤها→عورة' },
+  { id:'q6', binNames:['امرد','بوكن امرد'],
+    items:[{label:'ڤمودا 12 تاهون بلوم تومبوه جاڠݢوت',bin:'امرد'},{label:'للاكي ديواس برجاڠݢوت',bin:'بوكن امرد'}], answerText:'ڤمودا بلوم تومبوه جاڠݢوت→امرد؛ ديواس برجاڠݢوت→بوكن' },
+  { id:'q7', binNames:['دأوتاماكن كتيك ڤرابتن','تيدق دأوتاماكن'],
+    items:[{label:'دوكتور سجنس',bin:'دأوتاماكن كتيك ڤرابتن'},{label:'دوكتور بركن لاءين تنڤا سبب',bin:'تيدق دأوتاماكن'}], answerText:'دوكتور سجنس→دأوتاماكن؛ بركن لاءين تنڤا سبب→تيدق' }
+]},
+{ id:'s9', type:'situasi', badgeNum:9, title:'سيتواسي', questions:[
+  { id:'q1', stem:'حسن (12 تاهون، بلوم تومبوه جاڠݢوت) دجمڤوت ك مجليس ڤرمڤوان سهاج. اڤاكه ڤرتيمبڠن يڠ ڤرلو دأمبيل؟',
+    options:['تيادا مسئله لاڠسوڠ','ڤرلو برهاتي٢ كران حسن ترماسوق امرد يڠ بوليه ممباوا فتنة','واجب دبنركن كران ماسيه كانق٢','حرام سام سكالي تنڤا ڤڠچواليان'],
+    correct:1, answerText:'ڤرلو برهاتي٢ — حسن ترماسوق امرد يڠ بوليه ممباوا فتنة.' },
+  { id:'q2', stem:'عائشة برأوسيا 3 تاهون برماءين دلوار بيليق مندي تنڤا باجو. اڤاكه حكومڽ؟',
+    options:['ملڠݬر عورة سڤنوهڽ','تيادا مسئله كران عمور 0-4 تاهون بلوم دكيرا عورة','واجب دهوكوم','سام سڤرتي ديواس'],
+    correct:1, answerText:'تيادا مسئله — عمور 0-4 تاهون بلوم دكيرا عورة.' },
+  { id:'q3', stem:'ڤوان سيتي (دوكتور ڤرمڤوان) مراوت ڤسين ڤرمڤوان يڠ چيدرا سرياس. اڤاكه اين مماتوهي ادب عورة كتيك ضرورة؟',
+    options:['يا، دوكتور سجنس دأوتاماكن','تيدق، ڤرلو دوكتور للاكي','تيدق برماس أله لاڠسوڠ','ڤرلو كبنرن كتوا كمڤوڠ'],
+    correct:0, answerText:'يا — دوكتور سجنس دأوتاماكن دالم كأداءن ضرورة.' },
+  { id:'q4', stem:'اظهار (16 تاهون، تله برجاڠݢوت) دان اديقڽ سام٢ منونتو دسكوله اݢام. اڤاكه اظهار ماسيه دݢلر امرد؟',
+    options:['يا، سلاݢي مودا','تيدق، كران تله ملڤسي چيري٢ امرد (بلوم تومبوه جاڠݢوت)','يا، سموا رماج امرد','تيدق ڤستي'],
+    correct:1, answerText:'تيدق — امرد خصوص بواة يڠ بلوم تومبوه جاڠݢوت؛ اظهار تله ملڤسي چيري ايت.' },
+  { id:'q5', stem:'كأدرة برتموءن دڠن ابڠ سڤوڤوڽ برسنديرين تنڤا توتوڤ عورة سڤنوهڽ. اڤاكه اين دبنركن؟',
+    options:['يا، كران ابڠ سڤوڤو اداله محرم','تيدق، كران ابڠ سڤوڤو بوكن محرم (اجنبي)','يا، سلاݢي دالم رومه','تيادا حكوم برايتن'],
+    correct:1, answerText:'تيدق — ابڠ سڤوڤو بوكن محرم، ترماسوق اجنبي.' },
+  { id:'q6', stem:'ايستري داءود ممكاي ڤاكاين تربوك دهادڤن سڤوڤو سواميڽ (للاكي) كران "سام٢ ڤرمڤوان دالم كلوارݢا كبسر". اڤاكه اين تيڤت؟',
+    options:['تيڤت، كران اهلي كلوارݢا كبسر','تيدق تيڤت، سڤوڤو سوامي بوكن محرم كڤدڽ','تيڤت، سلاݢي دالم رومه سنديري','تيادا حكوم لاڠسوڠ'],
+    correct:1, answerText:'تيدق تيڤت — سڤوڤو سوامي بوكن محرمڽ، ملاءينكن سوامي سنديري.' },
+  { id:'q7', stem:'ݢورو ڤندديقن اݢام مڠاجر مورد لالاكي دان ڤرمڤوان دالم كلاس يڠ سام، دان مڠيڠتكن ادب مليهت اجنبي. اڤاكه ادب اوتام يڠ ڤرلو دتكنكن؟',
+    options:['منجاڬ ڤنداڠن دان عورة مسينڠ٢','دودوق راڤت٢ اونتوق مودهكن ڤمبلاجرن','تيادا ادب خصوص دڤرلوكن','هاڽ ڤرمڤوان ڤرلو منجاڬ عورة'],
+    correct:0, answerText:'منجاڬ ڤنداڠن دان عورة مسينڠ٢ — اداب اساس دالم ڤرݢاءولن اجنبي.' }
+]},
+{ id:'s10', type:'kesanSalah', badgeNum:10, title:'كسن ساله', questions:[
+  { id:'q1', sentenceWords:['عورة','للاكي','ايالة','انتارا','دادا','دان','لوتوت'], wrongIndex:4, correctReplacement:1,
+    replacementOptions:['باهو','ڤوسة','ڤينڬڠ'], answerText:'عورة للاكي ايالة انتارا ڤوسة دان لوتوت (بوكن "دادا").' },
+  { id:'q2', sentenceWords:['حكوم','منجاڬ','عورة','اداله','سنة'], wrongIndex:4, correctReplacement:1,
+    replacementOptions:['هاروس','واجب','مكروه'], answerText:'حكوم منجاڬ عورة اداله واجب (بوكن "سنة").' },
+  { id:'q3', sentenceWords:['امرد','ايالة','ڤمودا','يڠ','تله','تومبوه','جاڠݢوت'], wrongIndex:4, correctReplacement:2,
+    replacementOptions:['بلوم پرنه','بلوم تومبوه','ماسيه'], answerText:'امرد ايالة ڤمودا يڠ بلوم تومبوه جاڠݢوت (بوكن "تله تومبوه").' },
+  { id:'q4', sentenceWords:['كانق','عمور','0-4','تاهون','سام','سڤرتي','ديواس'], wrongIndex:4, correctReplacement:1,
+    replacementOptions:['بلوم دكيرا عورة','لبيه كتت درڤد','تيادا حكوم'], answerText:'كانق عمور 0-4 تاهون بلوم دكيرا عورة (بوكن "سام سڤرتي ديواس").' },
+  { id:'q5', sentenceWords:['كتيك','ضرورة','دوكتور','بركن','لاءين','دأوتاماكن'], wrongIndex:3, correctReplacement:0,
+    replacementOptions:['سجنس','مودا','ترکنل'], answerText:'كتيك ضرورة دوكتور سجنس دأوتاماكن (بوكن "بركن لاءين").' },
+  { id:'q6', sentenceWords:['داليل','منجاڬ','عورة','ترداڤت','دالم','سورة','النور'], wrongIndex:6, correctReplacement:0,
+    replacementOptions:['الأحزاب','مريم','يس'], answerText:'داليل منجاڬ عورة ترداڤت دالم سورة الأحزاب (بوكن "النور").' },
+  { id:'q7', sentenceWords:['عورة','ڤرمڤوان','ترماسوق','موك','دان','تاڤق','تاڠن'], wrongIndex:2, correctReplacement:1,
+    replacementOptions:['دكچوالكن درڤد','ساما دڠن','لبيه كچيل درڤد'], answerText:'عورة ڤرمڤوان دكچوالكن درڤد موك دان تاڤق تاڠن (بوكن "ترماسوق").' }
+]}
+]};
+
+</script>
+<script>
+const QUIZ_F7 = { id:'f7', sections:[
+{ id:'s1', type:'objektif', badgeNum:1, title:'اوبجيكتيف', questions:[
+  { id:'q1', stem:'براڤ لڠكه اوتام ممليهارا كسوچين ديري؟', options:['1','2','3','4'], correct:1, answerText:'2' },
+  { id:'q2', stem:'اڤاكه هوكوم ملڠݬر ڤراتورن حجاب؟', options:['هاروس','سنة','حرام','مكروه'], correct:2, answerText:'حرام' },
+  { id:'q3', stem:'داليل حكوم منجاڬ ڤنداڠن ترداڤت دالم سورة...', options:['النور اية 30','الأحزاب اية 59','النساء اية 23','البقرة اية 30'], correct:0, answerText:'النور اية 30' },
+  { id:'q4', stem:'اڤاكه 2 لڠكه ممليهارا كسوچين ديري؟', options:['ڤواسا دان صلاة','منجاءهي ڤنداڠن دان منجاڬ عورة','بلاجر دان بكرجا','ماكن دان تيدور'], correct:1, answerText:'منجاءهي ڤنداڠن دان منجاڬ عورة' },
+  { id:'q5', stem:'زينا مات برماقصود...', options:['ڤنداڠن يڠ ممباوا فتنة','ماكانن يڠ حرام','ڤرمينن يڠ سيا٢','كات٢ يڠ كسر'], correct:0, answerText:'ڤنداڠن يڠ ممباوا فتنة' }
+]},
+{ id:'s2', type:'betulSalah', badgeNum:2, title:'بتول اتاو ساله', questions:[
+  { id:'q1', stem:'ملقساناكن حجاب مندتڠكن ڤهالا عبادة.', correct:'betul', answerText:'بتول' },
+  { id:'q2', stem:'ملڠݬر حجاب تيدق ممبريكن سبارڠ كسن بوروق.', correct:'salah', answerText:'ساله — ملڠݬر حجاب ممبوك ڤينتو كڤد دوسا يڠ لبيه بسر.' },
+  { id:'q3', stem:'منجاڬ ڤنداڠن اداله سالاه ساتو لڠكه ممليهارا كحرمتن ديري.', correct:'betul', answerText:'بتول' },
+  { id:'q4', stem:'حكوم ملڠݬر حجاب اداله مكروه سهاج.', correct:'salah', answerText:'ساله — حكومڽ حرام.' },
+  { id:'q5', stem:'ملقساناكن حجاب دافت ملينديڠي سسأورڠ درڤد فتنة.', correct:'betul', answerText:'بتول' }
+]},
+{ id:'s3', type:'seretLepas', badgeNum:3, title:'سرت دان لڤس', questions:[
+  { id:'q1', stemParts:['هوكوم ملڠݬر حجاب اداله ',''], blanks:['حرام'], wordBank:['حرام','هاروس','سنة'], answerText:'حرام' },
+  { id:'q2', stemParts:['ملقساناكن حجاب ممليهارا ديري درڤد ',''], blanks:['فتنة'], wordBank:['فتنة','كأوڠن','ڤنياكيت'], answerText:'فتنة' },
+  { id:'q3', stemParts:['داليل حكوم منجاڬ ڤنداڠن ترداڤت دالم سورة ',''], blanks:['النور'], wordBank:['النور','الأحزاب','النساء'], answerText:'النور' },
+  { id:'q4', stemParts:['2 لڠكه ممليهارا كسوچين ديري ايالة منجاءهي ڤنداڠن دان منجاڬ ',''], blanks:['عورة'], wordBank:['عورة','هرتا','واقتو'], answerText:'عورة' },
+  { id:'q5', stemParts:['ملڠݬر حجاب ممبوك ڤينتو كڤد ',' يڠ لبيه بسر.'], blanks:['دوسا'], wordBank:['دوسا','ڤهالا','رزقي'], answerText:'دوسا' }
+]},
+{ id:'s4', type:'padankan', badgeNum:4, title:'ڤادنكن', questions:[
+  { id:'q1', pairs:[{left:'ملقساناكن حجاب',right:'دكيرا عبادة'},{left:'ملڠݬر حجاب',right:'ممبوك ڤينتو دوسا'}], answerText:'ملقساناكن-دكيرا عبادة، ملڠݬر-ممبوك ڤينتو دوسا' },
+  { id:'q2', pairs:[{left:'زينا مات',right:'ڤنداڠن يڠ ممباوا فتنة'},{left:'حجاب',right:'ڤنوتوڤ عورة دان ديري'}], answerText:'زينا مات-ڤنداڠن، حجاب-ڤنوتوڤ' },
+  { id:'q3', pairs:[{left:'النور اية 30',right:'داليل منجاڬ ڤنداڠن'},{left:'حرام',right:'حكوم ملڠݬر حجاب'}], answerText:'النور 30-داليل، حرام-حكوم ملڠݬر' },
+  { id:'q4', pairs:[{left:'منجاءهي ڤنداڠن',right:'لڠكه ڤرتام'},{left:'منجاڬ عورة',right:'لڠكه كدوا'}], answerText:'منجاءهي ڤنداڠن-لڠكه1، منجاڬ عورة-لڠكه2' },
+  { id:'q5', pairs:[{left:'كسن ملقساناكن',right:'ترهيندر درڤد دوسا'},{left:'كسن ملڠݬر',right:'تردده كڤد عذاب'}], answerText:'ملقساناكن-ترهيندر دوسا، ملڠݬر-تردده عذاب' }
+]},
+{ id:'s5', type:'susunUrutan', badgeNum:5, title:'سوسون مڠيكوت اوروتن', questions:[
+  { id:'q1', stem:'سوسون 2 لڠكه ممليهارا كسوچين ديري مڠيكوت اورتن دالم بوكو:', order:['منجاءهي ڤنداڠن','منجاڬ عورة'], answerText:'منجاءهي ڤنداڠن → منجاڬ عورة' },
+  { id:'q2', stem:'سوسون اكيبت ملڠݬر حجاب:', order:['ملڠݬر حجاب','ممبوك ڤينتو دوسا','تردده كڤد عذاب'], answerText:'ملڠݬر حجاب → ممبوك ڤينتو دوسا → تردده كڤد عذاب' },
+  { id:'q3', stem:'سوسون فاءيده ملقساناكن حجاب:', order:['دكيرا عبادة','ترهيندر درڤد دوسا','سلامت درڤد فتنة'], answerText:'دكيرا عبادة → ترهيندر درڤد دوسا → سلامت درڤد فتنة' },
+  { id:'q4', stem:'سوسون سيناريو زينا مات مڠيكوت حديث:', order:['ڤرمڤوان ممكاي باون','لالو دهادڤن عجنبي','عجنبي ترچيوم باوڽ','دكيرا زينا'], answerText:'ممكاي باون → لالو دهادڤن عجنبي → عجنبي ترچيوم باو → دكيرا زينا' },
+  { id:'q5', stem:'سوسون مڠيكوت كڤنتيڠن (اوتام دهولو):', order:['منجاڬ عورة','ممكاي ڤاكاين چانتيق'], answerText:'منجاڬ عورة → ممكاي ڤاكاين چانتيق' }
+]},
+{ id:'s6', type:'kenalPasti', badgeNum:6, title:'كنل ڤستي', questions:[
+  { id:'q1', stem:'كنل ڤستي: يڠ مانكه كسن ملقساناكن حجاب؟', options:['دكيرا عبادة','ممبوك ڤينتو دوسا','تردده عذاب','منمبهكن فتنة'], correct:0, answerText:'دكيرا عبادة' },
+  { id:'q2', stem:'كنل ڤستي: يڠ مانكه كسن ملڠݬر حجاب؟', options:['ترهيندر درڤد دوسا','سلامت درڤد فتنة','ممبوك ڤينتو دوسا يڠ لبيه بسر','مندتڠكن ڤهالا'], correct:2, answerText:'ممبوك ڤينتو دوسا يڠ لبيه بسر' },
+  { id:'q3', stem:'كنل ڤستي: يڠ مانكه بوكن سباهاڬين درڤد 2 لڠكه اوتام؟', options:['منجاءهي ڤنداڠن','منجاڬ عورة','ممكاي واڠين مهل','كدواڽ سكاليݢوس'], correct:2, answerText:'ممكاي واڠين مهل' },
+  { id:'q4', stem:'كنل ڤستي: اڤاكه يڠ دمقصودكن دڠن زينا مات؟', options:['ڤرچاكڤن كسر','ڤنداڠن يڠ ممباوا فتنة','ڤرݢاءولن بيبس','ڤاكاين تيدق سوڤن'], correct:1, answerText:'ڤنداڠن يڠ ممباوا فتنة' },
+  { id:'q5', stem:'كنل ڤستي: سورة اڤاكه منجادي داليل حكوم منجاڬ ڤنداڠن؟', options:['يس','النور','الملك','مريم'], correct:1, answerText:'النور' }
+]},
+{ id:'s7', type:'kesanSebab', badgeNum:7, title:'كسن دان سبب', questions:[
+  { id:'q1', stem:'سسأورڠ مسلمة ملقساناكن حجاب دڠن سمڤورنا:', effectOptions:['مندتڠكن ڤهالا عبادة','منمبهكن دوسا'], reasonOptions:['ستياڤ ڤركارا دكيرا سباݬاي عبادة','حجاب اداله بيبنن سماتا'], correctEffect:0, correctReason:0, answerText:'كسن: مندتڠكن ڤهالا / سبب: ستياڤ ڤركارا دكيرا عبادة' },
+  { id:'q2', stem:'سسأورڠ ڤرمڤوان ممكاي باون كوات لالو دهادڤن للاكي عجنبي:', effectOptions:['دكيرا برزنا مڠيكوت حديث','تيادا كسن'], reasonOptions:['حديث نبي مڽبوت ايا سباݬاي ڤرمڤوان يڠ برزنا','ايت هاڽ عادت سماتا'], correctEffect:0, correctReason:0, answerText:'كسن: دكيرا برزنا / سبب: حديث نبي مڽبوت دمكين' },
+  { id:'q3', stem:'سسأورڠ تيدق منجاڬ ڤنداڠنڽ ترهادڤ ڤركارا حرام:', effectOptions:['ترجروموس ك زينا مات','منمبهكن كتقواءن'], reasonOptions:['ڤنداڠن اداله ڤينتو ماسوق فتنة','ڤنداڠن تيادا كسن اڤ٢'], correctEffect:0, correctReason:0, answerText:'كسن: ترجروموس زينا مات / سبب: ڤنداڠن اداله ڤينتو فتنة' },
+  { id:'q4', stem:'سسأورڠ مسلمة ملڠݬر حجاب سچارا تروس-منروس:', effectOptions:['تردده كڤد انچامن عذاب','تردده كڤد ڤوجين'], reasonOptions:['ملڠݬر حجاب اداله ماعصية','ملڠݬر حجاب تيادا حكوم'], correctEffect:0, correctReason:0, answerText:'كسن: تردده انچامن عذاب / سبب: ملڠݬر حجاب اداله ماعصية' },
+  { id:'q5', stem:'احمد سنتياس ممكاي ڤاكاين يڠ منوتوڤ عورة دڠن سمڤورنا دان سݢرا ممالڠكن ڤنداڠن اڤابيلا ترليهت سسواتو يڠ بوليه ممباوا فتنة:', effectOptions:['احمد ممنوهي كدوا٢ لڠكه ممليهارا كحرمتن ديري','احمد هاڽ ممنوهي 1 لڠكه سهاج'], reasonOptions:['كدوا٢ لڠكه، يائيت منجاڬ ڤنداڠن دان منجاڬ عورة، دتونتوت سرنتق','هاڽ ساتو لڠكه سهاج يڠ دتونتوت'], correctEffect:0, correctReason:0, answerText:'كسن: ممنوهي كدوا٢ لڠكه / سبب: منجاڬ ڤنداڠن دان عورة دتونتوت سرنتق' }
+]},
+{ id:'s8', type:'klasifikasi', badgeNum:8, title:'كلاسيفيكاسي', questions:[
+  { id:'q1', binNames:['كسن ملقساناكن حجاب','كسن ملڠݬر حجاب'],
+    items:[{label:'دكيرا عبادة',bin:'كسن ملقساناكن حجاب'},{label:'ممبوك ڤينتو دوسا',bin:'كسن ملڠݬر حجاب'},{label:'ترهيندر درڤد دوسا',bin:'كسن ملقساناكن حجاب'},{label:'تردده عذاب',bin:'كسن ملڠݬر حجاب'}],
+    answerText:'دكيرا عبادة+ترهيندر دوسا→ملقساناكن؛ ممبوك ڤينتو دوسا+تردده عذاب→ملڠݬر' },
+  { id:'q2', binNames:['لڠكه ممليهارا كحرمتن','بوكن لڠكه'],
+    items:[{label:'منجاءهي ڤنداڠن',bin:'لڠكه ممليهارا كحرمتن'},{label:'منجاڬ عورة',bin:'لڠكه ممليهارا كحرمتن'},{label:'ممكاي ڤرهياسن مهل',bin:'بوكن لڠكه'}],
+    answerText:'منجاءهي ڤنداڠن+منجاڬ عورة→لڠكه؛ ڤرهياسن مهل→بوكن' },
+  { id:'q3', binNames:['حرام','دبنركن'],
+    items:[{label:'ملڠݬر حجاب',bin:'حرام'},{label:'زينا مات',bin:'حرام'},{label:'منجاڬ عورة',bin:'دبنركن'}],
+    answerText:'ملڠݬر حجاب+زينا مات→حرام؛ منجاڬ عورة→دبنركن' },
+  { id:'q4', binNames:['كسن ڤوسيتيف','كسن نيݢاتيف'],
+    items:[{label:'سلامت درڤد فتنة',bin:'كسن ڤوسيتيف'},{label:'تردده انچامن عذاب',bin:'كسن نيݢاتيف'},{label:'مندتڠكن ڤهالا',bin:'كسن ڤوسيتيف'}],
+    answerText:'سلامت درڤد فتنة+مندتڠكن ڤهالا→ڤوسيتيف؛ تردده عذاب→نيݢاتيف' },
+  { id:'q5', binNames:['سباهاڬين حجاب','بوكن سباهاڬين حجاب'],
+    items:[{label:'منجاڬ عورة',bin:'سباهاڬين حجاب'},{label:'منجاءهي ڤنداڠن',bin:'سباهاڬين حجاب'},{label:'برداندان تبل',bin:'بوكن سباهاڬين حجاب'}],
+    answerText:'منجاڬ عورة+منجاءهي ڤنداڠن→سباهاڬين حجاب؛ برداندان تبل→بوكن' }
+]},
+{ id:'s9', type:'situasi', badgeNum:9, title:'سيتواسي', questions:[
+  { id:'q1', stem:'نور ممكاي عطر يڠ كوات سبلوم كلوار ك ڤسر يڠ راماي للاكي عجنبي. اڤاكه ايت سسواي دڠن ادب منجاڬ كحرمتن ديري؟',
+    options:['يا، سلاݢي عطر ايت حلال','تيدق سسواي — بوليه ترجروموس ك حديث "دكيرا برزنا"','يا، اونتوق كليهاتن چانتيق','تيادا كأيتن دڠن اݢام'],
+    correct:1, answerText:'تيدق سسواي — حديث نبي مڽبوت ڤرمڤوان يڠ برواڠي اونتوق منريق ڤرهاتين عجنبي دكيرا برزنا.' },
+  { id:'q2', stem:'زيد مليهت ڤركارا حرام دي عالم مايا سچارا برتروسن. اڤاكه لڠكه يڠ سڤاتوتڽ اي أمبيل؟',
+    options:['ترسكن ملياتڽ كران تيادا سيڤا يڠ تاهو','منجاءهي دان منوتوڤ ڤنداڠنڽ درڤد ڤركارا ايت','كوڠسي دڠن رقن٢','تيادا ڤرلو دأمبيل تيندقن'],
+    correct:1, answerText:'منجاءهي دان منوتوڤ ڤنداڠنڽ — سلاري دڠن لڠكه منجاءهي ڤنداڠن.' },
+  { id:'q3', stem:'عائشة ممكاي توديڠ تتاڤي ماسيه ممڤرليهتكن بنتوق بادن دڠن باجو كتت. اڤاكه اين مماداءي سباݬاي حجاب يڠ سمڤورنا؟',
+    options:['يا، كران تله ممكاي توديڠ','تيدق، كران عورة ماسيه ترسرليه ملالوءي بنتوق بادن','يا، اصلكن وارنا ݢلڤ','تيادا هوكوم برايتن'],
+    correct:1, answerText:'تيدق — حجاب سمڤورنا ڤرلو منوتوڤ عورة تنڤا ممڤرليهتكن بنتوق بادن.' },
+  { id:'q4', stem:'حسن سلالو منجاڬ ڤنداڠنڽ دان عورتڽ، سرتا مڠاجق رقن٢ برأمل سرڤا. اڤاكه كسن يڠ اكن اي ڤرولهي؟',
+    options:['هاڽ ڤهالا اونتوق ديريڽ سنديري','ڤهالا عبادة دان ترهيندر درڤد دوسا','تيادا كسن لاڠسوڠ','كروݢين واقتو سماتا'],
+    correct:1, answerText:'ڤهالا عبادة دان ترهيندر درڤد دوسا — سسواي دڠن كسن ملقساناكن حجاب.' },
+  { id:'q5', stem:'ايستري داءود سلالو كلوار رومه تنڤا حجاب يڠ سمڤورنا والاوڤون تله دنصيهتي. اڤاكه رسيكو يڠ اي هادڤي؟',
+    options:['تيادا رسيكو لاڠسوڠ','تردده كڤد انچامن عذاب يڠ دسبوت اونتوق ڤسالهن اين','منمبهكن ڤهالا','دأنوݢرهكن كباءيقن'],
+    correct:1, answerText:'تردده كڤد انچامن عذاب — اداله كسن ملڠݬر حجاب.' }
+]},
+{ id:'s10', type:'kesanSalah', badgeNum:10, title:'كسن ساله', questions:[
+  { id:'q1', sentenceWords:['ملقساناكن','حجاب','ممبوك','ڤينتو','دوسا'], wrongIndex:2, correctReplacement:1,
+    replacementOptions:['ممبوك ڤينتو ڤهالا','منوتوڤ ڤينتو دوسا','ممبوك ڤينتو رزقي'], answerText:'ملقساناكن حجاب ممبوك ڤينتو ڤهالا (بوكن "دوسا").' },
+  { id:'q2', sentenceWords:['هوكوم','ملڠݬر','حجاب','اداله','سنة'], wrongIndex:4, correctReplacement:2,
+    replacementOptions:['هاروس','مكروه','حرام'], answerText:'هوكوم ملڠݬر حجاب اداله حرام (بوكن "سنة").' },
+  { id:'q3', sentenceWords:['2','لڠكه','ايالة','منجاءهي','هرتا','دان','منجاڬ','عورة'], wrongIndex:4, correctReplacement:0,
+    replacementOptions:['ڤنداڠن','مكانن','ڤاكاين'], answerText:'2 لڠكه ايالة منجاءهي ڤنداڠن دان منجاڬ عورة (بوكن "هرتا").' },
+  { id:'q4', sentenceWords:['داليل','منجاڬ','ڤنداڠن','ترداڤت','دالم','سورة','يس'], wrongIndex:6, correctReplacement:1,
+    replacementOptions:['الفاتحة','النور','مريم'], answerText:'داليل منجاڬ ڤنداڠن ترداڤت دالم سورة النور (بوكن "يس").' },
+  { id:'q5', sentenceWords:['زينا','مات','برماقصود','ماكانن','حرام'], wrongIndex:3, correctReplacement:0,
+    replacementOptions:['ڤنداڠن يڠ ممباوا فتنة','ڤاكاين يڠ چانتيق','رومه يڠ بسر'], answerText:'زينا مات برماقصود ڤنداڠن يڠ ممباوا فتنة (بوكن "ماكانن حرام").' }
+]}
+]};
+
+</script>
+<script>
+/* ============================================================
+   APP — orchestration layer. Wires engine.js + renderer.js +
+   the 7 fasal quiz banks + notes + glossary into the 3-page shell.
+   ============================================================ */
+(function(){
+const E = window.AkhlakEngine;
+const R = window.AkhlakRenderer;
+const el = R.el;
+
+const BANK = [QUIZ_F1, QUIZ_F2, QUIZ_F3, QUIZ_F4, QUIZ_F5, QUIZ_F6, QUIZ_F7];
+const BANK_BY_ID = {}; BANK.forEach(q => BANK_BY_ID[q.id] = q);
+const FASAL_TITLE = {}; FASAL_META.forEach(f => FASAL_TITLE[f.id] = f);
+
+let state = E.loadState();
+let activePage = 'notes';       // 'notes' | 'quiz' | 'gloss'
+let activeNotesFasal = 'f1';
+let activeQuizFasal = 'f1';
+let activeGlossFasal = 'all';
+let glossQuery = '';
+
+/* ---------- theme ---------- */
+function loadTheme(){
+  try { return localStorage.getItem(E.THEME_KEY) || 'light'; } catch(e){ return 'light'; }
+}
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+  try { localStorage.setItem(E.THEME_KEY, t); } catch(e){}
+}
+let theme = loadTheme();
+applyTheme(theme);
+
+/* ============================================================
+   STICKY HEADER + MIZAN COUNTER — rendered once, refreshed after
+   every submit/reset, present identically on all 3 pages.
+   ============================================================ */
+const header = document.getElementById('app-header');
+
+function renderHeader(){
+  header.innerHTML = '';
+  const tabbar = el('div', {class:'tabbar'});
+  [['notes','نوتا'], ['quiz','كويز'], ['gloss','ݢلوساري']].forEach(([key,label]) => {
+    const btn = el('button', {type:'button', text:label});
+    if (activePage === key) btn.classList.add('active');
+    btn.addEventListener('click', () => { activePage = key; renderAll(); });
+    tabbar.appendChild(btn);
+  });
+  const themeBtn = el('button', {type:'button', class:'theme-toggle', text: theme==='dark' ? '\u2600' : '\u263D'});
+  themeBtn.addEventListener('click', () => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    applyTheme(theme);
+    renderHeader();
+  });
+  tabbar.appendChild(themeBtn);
+  header.appendChild(tabbar);
+
+  // ---- Mizan counter bar: always rendered, all 3 pages, sticky under the tabs ----
+  const counterBar = el('div', {class:'counter-bar'});
+  const prog = E.overallProgress(BANK, state);
+  const totalLabel = el('div', {class:'counter-total'});
+  totalLabel.innerHTML = ''; // build with real nodes, not innerHTML injection of variable text
+  totalLabel.appendChild(document.createTextNode('جواڤن: '));
+  const bEl = document.createElement('b');
+  bEl.textContent = `${E.toArNum(prog.answered)}/${E.toArNum(prog.total)}`;
+  totalLabel.appendChild(bEl);
+  counterBar.appendChild(totalLabel);
+
+  const track = el('div', {class:'mizan-track'});
+  BANK.forEach(quiz => {
+    const cluster = el('div', {class:'mizan-cluster'});
+    const segRow = el('div', {class:'seg-row'});
+    quiz.sections.forEach(sec => {
+      const st = E.sectionSegmentState(sec.type, sec.questions, state, quiz.id, sec.id);
+      const segBtn = el('button', {type:'button', class:'seg ' + st});
+      // pressing a segment jumps straight to THAT section's card, not just
+      // the top of the fasal's quiz page -- this is the actual fix requested.
+      segBtn.addEventListener('click', () => { jumpToSection(quiz.id, sec.id); });
+      segRow.appendChild(segBtn);
+    });
+    cluster.appendChild(segRow);
+    const label = el('button', {type:'button', class:'fasal-label', text: FASAL_TITLE[quiz.id].title});
+    label.addEventListener('click', () => { jumpToSection(quiz.id, quiz.sections[0].id); });
+    cluster.appendChild(label);
+    track.appendChild(cluster);
+  });
+  counterBar.appendChild(track);
+
+  const correctReadout = el('span', {class:'correct-readout'});
+  correctReadout.textContent = prog.gradedTotal > 0
+    ? `\u2713 ${E.toArNum(prog.correctTotal)}/${E.toArNum(prog.gradedTotal)}`
+    : '';
+  counterBar.appendChild(correctReadout);
+
+  header.appendChild(counterBar);
+}
+
+/* ---------- lightweight highlight markup: **term** -> <mark class="hl">term</mark>
+   content is authored by us (data-notes.js), so this is safe to render as HTML ---------- */
+function hlText(s){
+  const esc = String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return esc.replace(/\*\*(.+?)\*\*/g, '<mark class="hl">$1</mark>');
+}
+
+/* ============================================================
+   NOTES PAGE
+   ============================================================ */
+const notesRoot = document.getElementById('page-notes');
+function renderNotes(){
+  notesRoot.innerHTML = '';
+  const tabs = el('div', {class:'fasal-tabs'});
+  FASAL_META.forEach(f => {
+    const btn = el('button', {type:'button', text: `${E.toArNum(f.num)}. ${f.title}`});
+    if (activeNotesFasal === f.id) btn.classList.add('active');
+    btn.addEventListener('click', () => { activeNotesFasal = f.id; renderNotes(); });
+    tabs.appendChild(btn);
+  });
+  notesRoot.appendChild(tabs);
+
+  const n = NOTES[activeNotesFasal];
+  const meta = FASAL_TITLE[activeNotesFasal];
+
+  const dalilBox = el('div', {class:'dalil-box'});
+  dalilBox.appendChild(el('div', {class:'ayat-ar jawi-head', text:n.dalil.ar}));
+  dalilBox.appendChild(el('div', {class:'ayat-ref', text:n.dalil.ref}));
+  dalilBox.appendChild(el('div', {class:'ayat-meaning', text:n.dalil.meaning}));
+  notesRoot.appendChild(dalilBox);
+
+  const ringkasanCard = el('div', {class:'card'});
+  ringkasanCard.appendChild(el('h3', {class:'jawi-head', text:'رينڬكسن'}));
+  const ringkasanP = el('p', {});
+  ringkasanP.innerHTML = hlText(n.ringkasan);
+  ringkasanCard.appendChild(ringkasanP);
+  notesRoot.appendChild(ringkasanCard);
+
+  const kpCard = el('div', {class:'card'});
+  kpCard.appendChild(el('h3', {class:'jawi-head', text:'ايسي ڤنتيڠ'}));
+  const ul = el('ul', {class:'key-points'});
+  n.keyPoints.forEach(k => { const li = el('li', {}); li.innerHTML = hlText(k); ul.appendChild(li); });
+  kpCard.appendChild(ul);
+  notesRoot.appendChild(kpCard);
+
+  if (n.table){
+    const tblCard = el('div', {class:'card'});
+    tblCard.appendChild(el('h3', {class:'jawi-head', text:n.table.title}));
+    const table = el('table', {class:'ref-table'});
+    const thead = el('tr', {});
+    n.table.headers.forEach(h => thead.appendChild(el('th', {text:h})));
+    table.appendChild(thead);
+    n.table.rows.forEach(row => {
+      const tr = el('tr', {});
+      row.forEach(cell => tr.appendChild(el('td', {text:cell})));
+      table.appendChild(tr);
+    });
+    tblCard.appendChild(table);
+    notesRoot.appendChild(tblCard);
+  }
+
+  const mmCard = el('div', {class:'card'});
+  mmCard.appendChild(el('h3', {class:'jawi-head', text:'ڤيتا ميندا'}));
+  const mm = el('div', {class:'mindmap'});
+  mm.appendChild(el('div', {class:'root', text:n.mindmap.root}));
+  const branchesWrap = el('div', {class:'branches'});
+  n.mindmap.branches.forEach(b => {
+    const branchEl = el('div', {class:'branch'});
+    branchEl.appendChild(el('div', {text:b.label, style:''}));
+    const leafsEl = el('ul', {class:'leafs'});
+    b.leafs.forEach(lf => { const li = el('li', {}); li.innerHTML = hlText(lf); leafsEl.appendChild(li); });
+    branchEl.appendChild(leafsEl);
+    branchesWrap.appendChild(branchEl);
+  });
+  mm.appendChild(branchesWrap);
+  mmCard.appendChild(mm);
+  notesRoot.appendChild(mmCard);
+
+  const tipBox = el('div', {class:'tip-box'});
+  tipBox.appendChild(el('strong', {text:'ڤيتوا: '}));
+  const tipSpan = el('span', {});
+  tipSpan.innerHTML = hlText(n.tip);
+  tipBox.appendChild(tipSpan);
+  notesRoot.appendChild(tipBox);
+}
+
+/* ============================================================
+   QUIZ PAGE
+   ============================================================ */
+const quizRoot = document.getElementById('page-quiz');
+function renderQuiz(){
+  quizRoot.innerHTML = '';
+  const tabs = el('div', {class:'fasal-tabs'});
+  FASAL_META.forEach(f => {
+    const btn = el('button', {type:'button', text: `${E.toArNum(f.num)}. ${f.title}`});
+    if (activeQuizFasal === f.id) btn.classList.add('active');
+    btn.addEventListener('click', () => { activeQuizFasal = f.id; renderQuiz(); });
+    tabs.appendChild(btn);
+  });
+  quizRoot.appendChild(tabs);
+
+  const quiz = BANK_BY_ID[activeQuizFasal];
+  quiz.sections.forEach(sec => {
+    const secContainer = el('div', {});
+    quizRoot.appendChild(secContainer);
+    R.renderSection(quiz, sec, state, secContainer, refreshChrome);
+  });
+
+  const savedRow = el('div', {class:'saved-at'});
+  savedRow.textContent = state.savedAt
+    ? '\u2713 disimpan automatik'
+    : '';
+  quizRoot.appendChild(savedRow);
+
+  const clearBtn = el('button', {type:'button', class:'clear-all-btn', text:'\u0680\u0627\u062F\u0645 \u0633\u0645\u0648\u0627 \u062C\u0648\u0627\u06A4\u0646'});
+  clearBtn.addEventListener('click', () => {
+    if (!confirm('ڤادم سموا جواڤن دالم اڤليكاسي اين؟ تيندقن اين تيدق بوليه دباتلكن.')) return;
+    BANK.forEach(q => q.sections.forEach(sec => E.resetSection(sec.questions, state, q.id, sec.id)));
+    renderAll();
+  });
+  quizRoot.appendChild(clearBtn);
+}
+
+/* ============================================================
+   GLOSSARY PAGE
+   ============================================================ */
+const glossRoot = document.getElementById('page-gloss');
+function renderGloss(){
+  glossRoot.innerHTML = '';
+  const search = el('input', {class:'search-box', type:'text', placeholder:'چاري ڤركاتأن...'});
+  search.value = glossQuery;
+  search.addEventListener('input', () => { glossQuery = search.value; renderGlossList(); });
+  glossRoot.appendChild(search);
+
+  const chips = el('div', {class:'filter-chips'});
+  const allChip = el('button', {type:'button', text:'سموا'});
+  if (activeGlossFasal === 'all') allChip.classList.add('active');
+  allChip.addEventListener('click', () => { activeGlossFasal = 'all'; renderGloss(); });
+  chips.appendChild(allChip);
+  FASAL_META.forEach(f => {
+    const chip = el('button', {type:'button', text:f.title});
+    if (activeGlossFasal === f.id) chip.classList.add('active');
+    chip.addEventListener('click', () => { activeGlossFasal = f.id; renderGloss(); });
+    chips.appendChild(chip);
+  });
+  glossRoot.appendChild(chips);
+
+  const listWrap = el('div', {id:'gloss-list'});
+  glossRoot.appendChild(listWrap);
+  renderGlossList();
+}
+function renderGlossList(){
+  const listWrap = document.getElementById('gloss-list');
+  if (!listWrap) return;
+  listWrap.innerHTML = '';
+  const q = glossQuery.trim();
+  const items = GLOSSARY.filter(g => {
+    if (activeGlossFasal !== 'all' && g.fasal !== activeGlossFasal) return false;
+    if (q && !g.term.includes(q) && !g.def.includes(q)) return false;
+    return true;
+  });
+  if (items.length === 0){
+    listWrap.appendChild(el('p', {text:'تيادا ڤركاتأن دجومڤاءي.'}));
+    return;
+  }
+  items.forEach(g => {
+    const item = el('div', {class:'gloss-item'});
+    item.appendChild(el('div', {class:'gloss-term', text:g.term}));
+    item.appendChild(el('div', {class:'gloss-fasal-tag', text:FASAL_TITLE[g.fasal].title}));
+    item.appendChild(el('div', {text:g.def}));
+    listWrap.appendChild(item);
+  });
+}
+
+/* ============================================================
+   PAGE SWITCH + MASTER RENDER
+   ============================================================ */
+function refreshChrome(){ renderHeader(); }
+
+function jumpToSection(fasalId, sectionId){
+  activePage = 'quiz';
+  activeQuizFasal = fasalId;
+  renderAll();
+  const target = document.getElementById(`sec-${fasalId}-${sectionId}`);
+  if (target && typeof target.scrollIntoView === 'function') target.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function renderAll(){
+  renderHeader();
+  document.getElementById('page-notes').classList.toggle('active', activePage==='notes');
+  document.getElementById('page-quiz').classList.toggle('active', activePage==='quiz');
+  document.getElementById('page-gloss').classList.toggle('active', activePage==='gloss');
+  if (activePage === 'notes') renderNotes();
+  else if (activePage === 'quiz') renderQuiz();
+  else renderGloss();
+}
+
+renderAll();
+})();
+
+</script>
+</body>
+</html>
